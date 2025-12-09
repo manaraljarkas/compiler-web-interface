@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 10px; border-bottom: 1px solid #ccc; }
+        a { color: #007bff; text-decoration: none; margin-right: 10px; }
+        a:hover { text-decoration: underline; }
+        .delete { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>Products</h1>
+    <p><a href="/add">Add Product</a></p>
+    <ul>
+        {% for product in products %}
+        <li>
+            <strong>{{ product.name }}</strong> - ${{ product.price }}
+            <a href="/products/{{ product.id }}">View</a>
+            <a href="/delete/{{ product.id }}" class="delete">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% if not products %}
+    <p>No products yet.</p>
+    {% endif %}
+</body>
+</html>
