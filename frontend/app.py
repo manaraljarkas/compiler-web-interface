@@ -33,13 +33,15 @@ def add():
         description = request.form.get("description")
         image = request.form.get("image")
         products = load_products()
-        new_id = max([p["id"] for p in products], default=0) + 1
+        new_id = 0
+        for p in products:
+            if p["id"] > new_id:
+                new_id = p["id"]
+        new_id += 1
+
         products.append({
-            "id": new_id,
-            "name": name,
-            "price": price,
-            "description": description,
-            "image": image
+            "id": new_id,"name": name,"price": price,
+            "description": description,"image": image
         })
         save_products(products)
         return redirect(url_for("products"))
@@ -49,7 +51,12 @@ def add():
 @app.route("/products/<int:id>")
 def product_details(id):
     products = load_products()
-    product = next((p for p in products if p["id"] == id), None)
+    product = None
+    for p in products:
+        if p["id"] == id:
+            product = p
+            break
+
     if product is None:
         return redirect(url_for("products"))
     return render_template("product_details.html", product=product)
@@ -58,7 +65,13 @@ def product_details(id):
 @app.route("/delete/<int:id>")
 def delete(id):
     products = load_products()
-    products = [p for p in products if p["id"] != id]
+    new_products = []
+    for p in products:
+        if p["id"] != id:
+            new_products.append(p)
+    products = new_products
+
+
     save_products(products)
     return redirect(url_for("products"))
 
