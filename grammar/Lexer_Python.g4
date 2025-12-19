@@ -1,4 +1,4 @@
-lexer grammar Lexer_CSS_Python;
+lexer grammar Lexer_Python;
 
 @header {
 import java.util.Stack;

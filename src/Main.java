@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         CharStream input = CharStreams.fromFileName("C:\\Users\\user\\Desktop\\compiler-web-interface-main\\compiler-web-interface-main\\src\\app.py");
 
-        Lexer_CSS_Python lexer = new Lexer_CSS_Python(input);
+        Lexer_Python lexer = new Lexer_Python(input);
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         tokens.fill();

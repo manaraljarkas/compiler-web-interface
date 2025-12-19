@@ -1,4 +1,4 @@
-// Generated from C:/MANAR/ITE/4th year/Compilers/compiler-web-interface/grammar/Lexer_CSS_Python.g4 by ANTLR 4.13.2
+// Generated from C:/MANAR/ITE/4th year/Compilers/compiler-web-interface/grammar/Lexer_Python.g4 by ANTLR 4.13.2
 
 import java.util.Stack;
 import java.util.LinkedList;
@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
-public class Lexer_CSS_Python extends Lexer {
+public class Lexer_Python extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.13.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -163,13 +163,13 @@ public class Lexer_CSS_Python extends Lexer {
 	    }
 
 
-	public Lexer_CSS_Python(CharStream input) {
+	public Lexer_Python(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Lexer_CSS_Python.g4"; }
+	public String getGrammarFileName() { return "Lexer_Python.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

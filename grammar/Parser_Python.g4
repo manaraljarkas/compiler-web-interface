@@ -1,5 +1,5 @@
-parser grammar Parser_CSS_Python;
-options { tokenVocab=Lexer_CSS_Python; }
+parser grammar Parser_Python;
+options { tokenVocab=Lexer_Python; }
 
 program: statement* EOF;
 

@@ -1,4 +1,4 @@
-// Generated from C:/MANAR/ITE/4th year/Compilers/compiler-web-interface/grammar/Parser_CSS_Python.g4 by ANTLR 4.13.2
+// Generated from C:/MANAR/ITE/4th year/Compilers/compiler-web-interface/grammar/Parser_Python.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
-public class Parser_CSS_Python extends Parser {
+public class Parser_Python extends Parser {
 	static { RuntimeMetaData.checkVersion("4.13.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -108,7 +108,7 @@ public class Parser_CSS_Python extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Parser_CSS_Python.g4"; }
+	public String getGrammarFileName() { return "Parser_Python.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -119,14 +119,14 @@ public class Parser_CSS_Python extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public Parser_CSS_Python(TokenStream input) {
+	public Parser_Python(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ProgramContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(Parser_CSS_Python.EOF, 0); }
+		public TerminalNode EOF() { return getToken(Parser_Python.EOF, 0); }
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
@@ -139,15 +139,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_program; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterProgram(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterProgram(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitProgram(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitProgram(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitProgram(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitProgram(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -208,15 +208,15 @@ public class Parser_CSS_Python extends Parser {
 		public RouteStmtContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterRouteStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterRouteStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitRouteStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitRouteStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitRouteStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitRouteStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -228,15 +228,15 @@ public class Parser_CSS_Python extends Parser {
 		public ImportStmtContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterImportStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterImportStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitImportStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitImportStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitImportStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitImportStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -248,15 +248,15 @@ public class Parser_CSS_Python extends Parser {
 		public GlobalAssignmentStmtContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterGlobalAssignmentStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterGlobalAssignmentStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitGlobalAssignmentStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitGlobalAssignmentStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitGlobalAssignmentStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitGlobalAssignmentStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -268,15 +268,15 @@ public class Parser_CSS_Python extends Parser {
 		public FunctionDefStmtContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunctionDefStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunctionDefStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunctionDefStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunctionDefStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunctionDefStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunctionDefStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -288,15 +288,15 @@ public class Parser_CSS_Python extends Parser {
 		public GlobalIfStmtContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterGlobalIfStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterGlobalIfStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitGlobalIfStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitGlobalIfStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitGlobalIfStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitGlobalIfStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -378,15 +378,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_import_statement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterImport_statement(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterImport_statement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitImport_statement(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitImport_statement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitImport_statement(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitImport_statement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -429,15 +429,15 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Import_flaskContext extends ParserRuleContext {
-		public TerminalNode FROM() { return getToken(Parser_CSS_Python.FROM, 0); }
-		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_CSS_Python.CHARACTERS); }
+		public TerminalNode FROM() { return getToken(Parser_Python.FROM, 0); }
+		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_Python.CHARACTERS); }
 		public TerminalNode CHARACTERS(int i) {
-			return getToken(Parser_CSS_Python.CHARACTERS, i);
+			return getToken(Parser_Python.CHARACTERS, i);
 		}
-		public TerminalNode IMPORT() { return getToken(Parser_CSS_Python.IMPORT, 0); }
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public TerminalNode IMPORT() { return getToken(Parser_Python.IMPORT, 0); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public Import_flaskContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -445,15 +445,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_import_flask; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterImport_flask(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterImport_flask(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitImport_flask(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitImport_flask(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitImport_flask(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitImport_flask(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -504,22 +504,22 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Import_jsonContext extends ParserRuleContext {
-		public TerminalNode IMPORT_JSON() { return getToken(Parser_CSS_Python.IMPORT_JSON, 0); }
+		public TerminalNode IMPORT_JSON() { return getToken(Parser_Python.IMPORT_JSON, 0); }
 		public Import_jsonContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_import_json; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterImport_json(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterImport_json(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitImport_json(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitImport_json(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitImport_json(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitImport_json(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -547,33 +547,33 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Function_definationContext extends ParserRuleContext {
-		public TerminalNode DEF() { return getToken(Parser_CSS_Python.DEF, 0); }
-		public TerminalNode CHARACTERS() { return getToken(Parser_CSS_Python.CHARACTERS, 0); }
+		public TerminalNode DEF() { return getToken(Parser_Python.DEF, 0); }
+		public TerminalNode CHARACTERS() { return getToken(Parser_Python.CHARACTERS, 0); }
 		public Function_parameterContext function_parameter() {
 			return getRuleContext(Function_parameterContext.class,0);
 		}
-		public TerminalNode Colon() { return getToken(Parser_CSS_Python.Colon, 0); }
-		public TerminalNode NEWLINE() { return getToken(Parser_CSS_Python.NEWLINE, 0); }
-		public TerminalNode INDENT() { return getToken(Parser_CSS_Python.INDENT, 0); }
+		public TerminalNode Colon() { return getToken(Parser_Python.Colon, 0); }
+		public TerminalNode NEWLINE() { return getToken(Parser_Python.NEWLINE, 0); }
+		public TerminalNode INDENT() { return getToken(Parser_Python.INDENT, 0); }
 		public Function_bodyContext function_body() {
 			return getRuleContext(Function_bodyContext.class,0);
 		}
-		public TerminalNode DEDENT() { return getToken(Parser_CSS_Python.DEDENT, 0); }
+		public TerminalNode DEDENT() { return getToken(Parser_Python.DEDENT, 0); }
 		public Function_definationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_function_defination; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunction_defination(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunction_defination(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunction_defination(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunction_defination(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunction_defination(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunction_defination(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -627,15 +627,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_function_body; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunction_body(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunction_body(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunction_body(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunction_body(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunction_body(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunction_body(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -694,15 +694,15 @@ public class Parser_CSS_Python extends Parser {
 		public FunctionCallStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunctionCallStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunctionCallStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunctionCallStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunctionCallStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunctionCallStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunctionCallStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -714,33 +714,33 @@ public class Parser_CSS_Python extends Parser {
 		public IfStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterIfStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterIfStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitIfStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitIfStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitIfStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitIfStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class BreakStmtContext extends Statement_in_functionContext {
-		public TerminalNode BREAK() { return getToken(Parser_CSS_Python.BREAK, 0); }
+		public TerminalNode BREAK() { return getToken(Parser_Python.BREAK, 0); }
 		public BreakStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterBreakStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterBreakStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitBreakStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitBreakStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitBreakStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitBreakStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -752,15 +752,15 @@ public class Parser_CSS_Python extends Parser {
 		public WithStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterWithStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterWithStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitWithStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitWithStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitWithStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitWithStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -772,15 +772,15 @@ public class Parser_CSS_Python extends Parser {
 		public AssignmentStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterAssignmentStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterAssignmentStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitAssignmentStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitAssignmentStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitAssignmentStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitAssignmentStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -792,15 +792,15 @@ public class Parser_CSS_Python extends Parser {
 		public ReturnStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterReturnStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterReturnStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitReturnStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitReturnStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitReturnStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitReturnStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -812,15 +812,15 @@ public class Parser_CSS_Python extends Parser {
 		public ForStmtContext(Statement_in_functionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterForStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterForStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitForStmt(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitForStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitForStmt(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitForStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -903,8 +903,8 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Function_parameterContext extends ParserRuleContext {
-		public TerminalNode OPEN_B() { return getToken(Parser_CSS_Python.OPEN_B, 0); }
-		public TerminalNode CLOSE_B() { return getToken(Parser_CSS_Python.CLOSE_B, 0); }
+		public TerminalNode OPEN_B() { return getToken(Parser_Python.OPEN_B, 0); }
+		public TerminalNode CLOSE_B() { return getToken(Parser_Python.CLOSE_B, 0); }
 		public Set_function_parameterContext set_function_parameter() {
 			return getRuleContext(Set_function_parameterContext.class,0);
 		}
@@ -914,15 +914,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_function_parameter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunction_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunction_parameter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunction_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunction_parameter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunction_parameter(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunction_parameter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -963,13 +963,13 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Set_function_parameterContext extends ParserRuleContext {
-		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_CSS_Python.CHARACTERS); }
+		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_Python.CHARACTERS); }
 		public TerminalNode CHARACTERS(int i) {
-			return getToken(Parser_CSS_Python.CHARACTERS, i);
+			return getToken(Parser_Python.CHARACTERS, i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public Set_function_parameterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -977,15 +977,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_set_function_parameter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterSet_function_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterSet_function_parameter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitSet_function_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitSet_function_parameter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitSet_function_parameter(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitSet_function_parameter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1030,10 +1030,10 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class RouteContext extends ParserRuleContext {
-		public TerminalNode AT() { return getToken(Parser_CSS_Python.AT, 0); }
-		public TerminalNode APP() { return getToken(Parser_CSS_Python.APP, 0); }
-		public TerminalNode DOT() { return getToken(Parser_CSS_Python.DOT, 0); }
-		public TerminalNode ROUTE() { return getToken(Parser_CSS_Python.ROUTE, 0); }
+		public TerminalNode AT() { return getToken(Parser_Python.AT, 0); }
+		public TerminalNode APP() { return getToken(Parser_Python.APP, 0); }
+		public TerminalNode DOT() { return getToken(Parser_Python.DOT, 0); }
+		public TerminalNode ROUTE() { return getToken(Parser_Python.ROUTE, 0); }
 		public Route_parameterContext route_parameter() {
 			return getRuleContext(Route_parameterContext.class,0);
 		}
@@ -1043,15 +1043,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_route; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterRoute(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterRoute(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitRoute(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitRoute(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitRoute(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitRoute(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1087,26 +1087,26 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Route_parameterContext extends ParserRuleContext {
-		public TerminalNode OPEN_B() { return getToken(Parser_CSS_Python.OPEN_B, 0); }
+		public TerminalNode OPEN_B() { return getToken(Parser_Python.OPEN_B, 0); }
 		public Route_parameter_bodyContext route_parameter_body() {
 			return getRuleContext(Route_parameter_bodyContext.class,0);
 		}
-		public TerminalNode CLOSE_B() { return getToken(Parser_CSS_Python.CLOSE_B, 0); }
+		public TerminalNode CLOSE_B() { return getToken(Parser_Python.CLOSE_B, 0); }
 		public Route_parameterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_route_parameter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterRoute_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterRoute_parameter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitRoute_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitRoute_parameter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitRoute_parameter(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitRoute_parameter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1138,8 +1138,8 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Route_parameter_bodyContext extends ParserRuleContext {
-		public TerminalNode STRING() { return getToken(Parser_CSS_Python.STRING, 0); }
-		public TerminalNode COMMA() { return getToken(Parser_CSS_Python.COMMA, 0); }
+		public TerminalNode STRING() { return getToken(Parser_Python.STRING, 0); }
+		public TerminalNode COMMA() { return getToken(Parser_Python.COMMA, 0); }
 		public Route_parameter_optionsContext route_parameter_options() {
 			return getRuleContext(Route_parameter_optionsContext.class,0);
 		}
@@ -1149,15 +1149,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_route_parameter_body; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterRoute_parameter_body(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterRoute_parameter_body(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitRoute_parameter_body(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitRoute_parameter_body(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitRoute_parameter_body(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitRoute_parameter_body(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1202,11 +1202,11 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Route_parameter_optionsContext extends ParserRuleContext {
-		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_CSS_Python.CHARACTERS); }
+		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_Python.CHARACTERS); }
 		public TerminalNode CHARACTERS(int i) {
-			return getToken(Parser_CSS_Python.CHARACTERS, i);
+			return getToken(Parser_Python.CHARACTERS, i);
 		}
-		public TerminalNode EQUAL() { return getToken(Parser_CSS_Python.EQUAL, 0); }
+		public TerminalNode EQUAL() { return getToken(Parser_Python.EQUAL, 0); }
 		public ArrayContext array() {
 			return getRuleContext(ArrayContext.class,0);
 		}
@@ -1216,15 +1216,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_route_parameter_options; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterRoute_parameter_options(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterRoute_parameter_options(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitRoute_parameter_options(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitRoute_parameter_options(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitRoute_parameter_options(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitRoute_parameter_options(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1273,26 +1273,26 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ArrayContext extends ParserRuleContext {
-		public TerminalNode LEFT_ARRAY() { return getToken(Parser_CSS_Python.LEFT_ARRAY, 0); }
+		public TerminalNode LEFT_ARRAY() { return getToken(Parser_Python.LEFT_ARRAY, 0); }
 		public Array_itemsContext array_items() {
 			return getRuleContext(Array_itemsContext.class,0);
 		}
-		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_CSS_Python.RIGHT_ARRAY, 0); }
+		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_Python.RIGHT_ARRAY, 0); }
 		public ArrayContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_array; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterArray(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterArray(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitArray(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitArray(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitArray(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitArray(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1324,13 +1324,13 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Array_itemsContext extends ParserRuleContext {
-		public List<TerminalNode> STRING() { return getTokens(Parser_CSS_Python.STRING); }
+		public List<TerminalNode> STRING() { return getTokens(Parser_Python.STRING); }
 		public TerminalNode STRING(int i) {
-			return getToken(Parser_CSS_Python.STRING, i);
+			return getToken(Parser_Python.STRING, i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public Array_itemsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1338,15 +1338,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_array_items; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterArray_items(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterArray_items(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitArray_items(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitArray_items(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitArray_items(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitArray_items(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1391,7 +1391,7 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Return_statementContext extends ParserRuleContext {
-		public TerminalNode RETURN() { return getToken(Parser_CSS_Python.RETURN, 0); }
+		public TerminalNode RETURN() { return getToken(Parser_Python.RETURN, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -1401,15 +1401,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_return_statement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterReturn_statement(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterReturn_statement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitReturn_statement(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitReturn_statement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitReturn_statement(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitReturn_statement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1442,8 +1442,8 @@ public class Parser_CSS_Python extends Parser {
 		public Function_nameContext function_name() {
 			return getRuleContext(Function_nameContext.class,0);
 		}
-		public TerminalNode OPEN_B() { return getToken(Parser_CSS_Python.OPEN_B, 0); }
-		public TerminalNode CLOSE_B() { return getToken(Parser_CSS_Python.CLOSE_B, 0); }
+		public TerminalNode OPEN_B() { return getToken(Parser_Python.OPEN_B, 0); }
+		public TerminalNode CLOSE_B() { return getToken(Parser_Python.CLOSE_B, 0); }
 		public Argument_listContext argument_list() {
 			return getRuleContext(Argument_listContext.class,0);
 		}
@@ -1453,15 +1453,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_function_call; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunction_call(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunction_call(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunction_call(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunction_call(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunction_call(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunction_call(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1504,13 +1504,13 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Function_nameContext extends ParserRuleContext {
-		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_CSS_Python.CHARACTERS); }
+		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_Python.CHARACTERS); }
 		public TerminalNode CHARACTERS(int i) {
-			return getToken(Parser_CSS_Python.CHARACTERS, i);
+			return getToken(Parser_Python.CHARACTERS, i);
 		}
-		public List<TerminalNode> DOT() { return getTokens(Parser_CSS_Python.DOT); }
+		public List<TerminalNode> DOT() { return getTokens(Parser_Python.DOT); }
 		public TerminalNode DOT(int i) {
-			return getToken(Parser_CSS_Python.DOT, i);
+			return getToken(Parser_Python.DOT, i);
 		}
 		public Function_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1518,15 +1518,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_function_name; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunction_name(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunction_name(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunction_name(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunction_name(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunction_name(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunction_name(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1577,9 +1577,9 @@ public class Parser_CSS_Python extends Parser {
 		public ArgumentContext argument(int i) {
 			return getRuleContext(ArgumentContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public Argument_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1587,15 +1587,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_argument_list; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterArgument_list(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterArgument_list(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitArgument_list(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitArgument_list(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitArgument_list(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitArgument_list(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1655,15 +1655,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_argument; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterArgument(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterArgument(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitArgument(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitArgument(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitArgument(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitArgument(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1711,27 +1711,27 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Key_valueContext extends ParserRuleContext {
-		public TerminalNode EQUAL() { return getToken(Parser_CSS_Python.EQUAL, 0); }
+		public TerminalNode EQUAL() { return getToken(Parser_Python.EQUAL, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode CHARACTERS() { return getToken(Parser_CSS_Python.CHARACTERS, 0); }
-		public TerminalNode DEFAULT() { return getToken(Parser_CSS_Python.DEFAULT, 0); }
+		public TerminalNode CHARACTERS() { return getToken(Parser_Python.CHARACTERS, 0); }
+		public TerminalNode DEFAULT() { return getToken(Parser_Python.DEFAULT, 0); }
 		public Key_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_key_value; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterKey_value(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterKey_value(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitKey_value(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitKey_value(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitKey_value(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitKey_value(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1775,24 +1775,24 @@ public class Parser_CSS_Python extends Parser {
 		public Function_callContext function_call() {
 			return getRuleContext(Function_callContext.class,0);
 		}
-		public TerminalNode LEFT_ARRAY() { return getToken(Parser_CSS_Python.LEFT_ARRAY, 0); }
-		public TerminalNode STRING() { return getToken(Parser_CSS_Python.STRING, 0); }
-		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_CSS_Python.RIGHT_ARRAY, 0); }
+		public TerminalNode LEFT_ARRAY() { return getToken(Parser_Python.LEFT_ARRAY, 0); }
+		public TerminalNode STRING() { return getToken(Parser_Python.STRING, 0); }
+		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_Python.RIGHT_ARRAY, 0); }
 		public Function_arrayContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_function_array; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFunction_array(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFunction_array(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFunction_array(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFunction_array(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFunction_array(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFunction_array(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1826,8 +1826,8 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Curly_argumentContext extends ParserRuleContext {
-		public TerminalNode LEFT_CURLY() { return getToken(Parser_CSS_Python.LEFT_CURLY, 0); }
-		public TerminalNode RIGHT_CURLY() { return getToken(Parser_CSS_Python.RIGHT_CURLY, 0); }
+		public TerminalNode LEFT_CURLY() { return getToken(Parser_Python.LEFT_CURLY, 0); }
+		public TerminalNode RIGHT_CURLY() { return getToken(Parser_Python.RIGHT_CURLY, 0); }
 		public Curly_itemsContext curly_items() {
 			return getRuleContext(Curly_itemsContext.class,0);
 		}
@@ -1837,15 +1837,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_curly_argument; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterCurly_argument(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterCurly_argument(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitCurly_argument(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitCurly_argument(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitCurly_argument(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitCurly_argument(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1892,9 +1892,9 @@ public class Parser_CSS_Python extends Parser {
 		public Curly_itemContext curly_item(int i) {
 			return getRuleContext(Curly_itemContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public Curly_itemsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1902,15 +1902,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_curly_items; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterCurly_items(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterCurly_items(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitCurly_items(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitCurly_items(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitCurly_items(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitCurly_items(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1961,22 +1961,22 @@ public class Parser_CSS_Python extends Parser {
 		public Other_expressionContext other_expression(int i) {
 			return getRuleContext(Other_expressionContext.class,i);
 		}
-		public TerminalNode Colon() { return getToken(Parser_CSS_Python.Colon, 0); }
+		public TerminalNode Colon() { return getToken(Parser_Python.Colon, 0); }
 		public Curly_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_curly_item; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterCurly_item(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterCurly_item(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitCurly_item(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitCurly_item(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitCurly_item(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitCurly_item(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2020,15 +2020,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_expression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterExpression(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitExpression(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitExpression(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2079,12 +2079,12 @@ public class Parser_CSS_Python extends Parser {
 		public Index_accessContext index_access() {
 			return getRuleContext(Index_accessContext.class,0);
 		}
-		public TerminalNode CHARACTERS() { return getToken(Parser_CSS_Python.CHARACTERS, 0); }
+		public TerminalNode CHARACTERS() { return getToken(Parser_Python.CHARACTERS, 0); }
 		public Function_nameContext function_name() {
 			return getRuleContext(Function_nameContext.class,0);
 		}
-		public TerminalNode NUMBERS() { return getToken(Parser_CSS_Python.NUMBERS, 0); }
-		public TerminalNode STRING() { return getToken(Parser_CSS_Python.STRING, 0); }
+		public TerminalNode NUMBERS() { return getToken(Parser_Python.NUMBERS, 0); }
+		public TerminalNode STRING() { return getToken(Parser_Python.STRING, 0); }
 		public Function_arrayContext function_array() {
 			return getRuleContext(Function_arrayContext.class,0);
 		}
@@ -2094,15 +2094,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_other_expression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterOther_expression(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterOther_expression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitOther_expression(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitOther_expression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitOther_expression(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitOther_expression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2178,31 +2178,31 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class With_openContext extends ParserRuleContext {
-		public TerminalNode WITH() { return getToken(Parser_CSS_Python.WITH, 0); }
-		public TerminalNode OPEN() { return getToken(Parser_CSS_Python.OPEN, 0); }
-		public TerminalNode OPEN_B() { return getToken(Parser_CSS_Python.OPEN_B, 0); }
+		public TerminalNode WITH() { return getToken(Parser_Python.WITH, 0); }
+		public TerminalNode OPEN() { return getToken(Parser_Python.OPEN, 0); }
+		public TerminalNode OPEN_B() { return getToken(Parser_Python.OPEN_B, 0); }
 		public With_parameterContext with_parameter() {
 			return getRuleContext(With_parameterContext.class,0);
 		}
-		public TerminalNode CLOSE_B() { return getToken(Parser_CSS_Python.CLOSE_B, 0); }
-		public TerminalNode AS() { return getToken(Parser_CSS_Python.AS, 0); }
-		public TerminalNode CHARACTERS() { return getToken(Parser_CSS_Python.CHARACTERS, 0); }
-		public TerminalNode Colon() { return getToken(Parser_CSS_Python.Colon, 0); }
+		public TerminalNode CLOSE_B() { return getToken(Parser_Python.CLOSE_B, 0); }
+		public TerminalNode AS() { return getToken(Parser_Python.AS, 0); }
+		public TerminalNode CHARACTERS() { return getToken(Parser_Python.CHARACTERS, 0); }
+		public TerminalNode Colon() { return getToken(Parser_Python.Colon, 0); }
 		public With_openContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_with_open; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterWith_open(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterWith_open(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitWith_open(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitWith_open(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitWith_open(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitWith_open(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2244,13 +2244,13 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class With_parameterContext extends ParserRuleContext {
-		public List<TerminalNode> STRING() { return getTokens(Parser_CSS_Python.STRING); }
+		public List<TerminalNode> STRING() { return getTokens(Parser_Python.STRING); }
 		public TerminalNode STRING(int i) {
-			return getToken(Parser_CSS_Python.STRING, i);
+			return getToken(Parser_Python.STRING, i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public With_parameterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2258,15 +2258,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_with_parameter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterWith_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterWith_parameter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitWith_parameter(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitWith_parameter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitWith_parameter(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitWith_parameter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2311,27 +2311,27 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class AssignmentContext extends ParserRuleContext {
-		public TerminalNode CHARACTERS() { return getToken(Parser_CSS_Python.CHARACTERS, 0); }
-		public TerminalNode EQUAL() { return getToken(Parser_CSS_Python.EQUAL, 0); }
+		public TerminalNode CHARACTERS() { return getToken(Parser_Python.CHARACTERS, 0); }
+		public TerminalNode EQUAL() { return getToken(Parser_Python.EQUAL, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode PLUSEQUAL() { return getToken(Parser_CSS_Python.PLUSEQUAL, 0); }
+		public TerminalNode PLUSEQUAL() { return getToken(Parser_Python.PLUSEQUAL, 0); }
 		public AssignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assignment; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterAssignment(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterAssignment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitAssignment(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitAssignment(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitAssignment(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitAssignment(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2380,14 +2380,14 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class If_statementContext extends ParserRuleContext {
-		public TerminalNode IF() { return getToken(Parser_CSS_Python.IF, 0); }
+		public TerminalNode IF() { return getToken(Parser_Python.IF, 0); }
 		public ConditionContext condition() {
 			return getRuleContext(ConditionContext.class,0);
 		}
-		public TerminalNode Colon() { return getToken(Parser_CSS_Python.Colon, 0); }
-		public TerminalNode NEWLINE() { return getToken(Parser_CSS_Python.NEWLINE, 0); }
-		public TerminalNode INDENT() { return getToken(Parser_CSS_Python.INDENT, 0); }
-		public TerminalNode DEDENT() { return getToken(Parser_CSS_Python.DEDENT, 0); }
+		public TerminalNode Colon() { return getToken(Parser_Python.Colon, 0); }
+		public TerminalNode NEWLINE() { return getToken(Parser_Python.NEWLINE, 0); }
+		public TerminalNode INDENT() { return getToken(Parser_Python.INDENT, 0); }
+		public TerminalNode DEDENT() { return getToken(Parser_Python.DEDENT, 0); }
 		public List<Statement_in_functionContext> statement_in_function() {
 			return getRuleContexts(Statement_in_functionContext.class);
 		}
@@ -2400,15 +2400,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_if_statement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterIf_statement(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterIf_statement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitIf_statement(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitIf_statement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitIf_statement(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitIf_statement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2476,15 +2476,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_condition; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterCondition(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterCondition(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitCondition(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitCondition(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitCondition(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitCondition(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2516,27 +2516,27 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Comparison_operatorContext extends ParserRuleContext {
-		public TerminalNode NOT_EQUAL() { return getToken(Parser_CSS_Python.NOT_EQUAL, 0); }
-		public TerminalNode IS() { return getToken(Parser_CSS_Python.IS, 0); }
-		public TerminalNode IS_NOT() { return getToken(Parser_CSS_Python.IS_NOT, 0); }
-		public TerminalNode EQUAL_EQUAL() { return getToken(Parser_CSS_Python.EQUAL_EQUAL, 0); }
-		public TerminalNode RIGHT_ANGLE() { return getToken(Parser_CSS_Python.RIGHT_ANGLE, 0); }
-		public TerminalNode LEFT_ANGLE() { return getToken(Parser_CSS_Python.LEFT_ANGLE, 0); }
+		public TerminalNode NOT_EQUAL() { return getToken(Parser_Python.NOT_EQUAL, 0); }
+		public TerminalNode IS() { return getToken(Parser_Python.IS, 0); }
+		public TerminalNode IS_NOT() { return getToken(Parser_Python.IS_NOT, 0); }
+		public TerminalNode EQUAL_EQUAL() { return getToken(Parser_Python.EQUAL_EQUAL, 0); }
+		public TerminalNode RIGHT_ANGLE() { return getToken(Parser_Python.RIGHT_ANGLE, 0); }
+		public TerminalNode LEFT_ANGLE() { return getToken(Parser_Python.LEFT_ANGLE, 0); }
 		public Comparison_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_comparison_operator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterComparison_operator(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterComparison_operator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitComparison_operator(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitComparison_operator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitComparison_operator(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitComparison_operator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2573,25 +2573,25 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Index_accessContext extends ParserRuleContext {
-		public TerminalNode CHARACTERS() { return getToken(Parser_CSS_Python.CHARACTERS, 0); }
-		public TerminalNode LEFT_ARRAY() { return getToken(Parser_CSS_Python.LEFT_ARRAY, 0); }
-		public TerminalNode STRING() { return getToken(Parser_CSS_Python.STRING, 0); }
-		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_CSS_Python.RIGHT_ARRAY, 0); }
+		public TerminalNode CHARACTERS() { return getToken(Parser_Python.CHARACTERS, 0); }
+		public TerminalNode LEFT_ARRAY() { return getToken(Parser_Python.LEFT_ARRAY, 0); }
+		public TerminalNode STRING() { return getToken(Parser_Python.STRING, 0); }
+		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_Python.RIGHT_ARRAY, 0); }
 		public Index_accessContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_index_access; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterIndex_access(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterIndex_access(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitIndex_access(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitIndex_access(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitIndex_access(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitIndex_access(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2625,16 +2625,16 @@ public class Parser_CSS_Python extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class For_loopContext extends ParserRuleContext {
-		public TerminalNode FOR() { return getToken(Parser_CSS_Python.FOR, 0); }
-		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_CSS_Python.CHARACTERS); }
+		public TerminalNode FOR() { return getToken(Parser_Python.FOR, 0); }
+		public List<TerminalNode> CHARACTERS() { return getTokens(Parser_Python.CHARACTERS); }
 		public TerminalNode CHARACTERS(int i) {
-			return getToken(Parser_CSS_Python.CHARACTERS, i);
+			return getToken(Parser_Python.CHARACTERS, i);
 		}
-		public TerminalNode IN() { return getToken(Parser_CSS_Python.IN, 0); }
-		public TerminalNode Colon() { return getToken(Parser_CSS_Python.Colon, 0); }
-		public TerminalNode NEWLINE() { return getToken(Parser_CSS_Python.NEWLINE, 0); }
-		public TerminalNode INDENT() { return getToken(Parser_CSS_Python.INDENT, 0); }
-		public TerminalNode DEDENT() { return getToken(Parser_CSS_Python.DEDENT, 0); }
+		public TerminalNode IN() { return getToken(Parser_Python.IN, 0); }
+		public TerminalNode Colon() { return getToken(Parser_Python.Colon, 0); }
+		public TerminalNode NEWLINE() { return getToken(Parser_Python.NEWLINE, 0); }
+		public TerminalNode INDENT() { return getToken(Parser_Python.INDENT, 0); }
+		public TerminalNode DEDENT() { return getToken(Parser_Python.DEDENT, 0); }
 		public List<Statement_in_functionContext> statement_in_function() {
 			return getRuleContexts(Statement_in_functionContext.class);
 		}
@@ -2647,15 +2647,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_for_loop; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterFor_loop(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterFor_loop(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitFor_loop(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitFor_loop(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitFor_loop(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitFor_loop(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2724,42 +2724,42 @@ public class Parser_CSS_Python extends Parser {
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class EmptyListContext extends ListContext {
-		public TerminalNode LEFT_ARRAY() { return getToken(Parser_CSS_Python.LEFT_ARRAY, 0); }
-		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_CSS_Python.RIGHT_ARRAY, 0); }
+		public TerminalNode LEFT_ARRAY() { return getToken(Parser_Python.LEFT_ARRAY, 0); }
+		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_Python.RIGHT_ARRAY, 0); }
 		public EmptyListContext(ListContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterEmptyList(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterEmptyList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitEmptyList(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitEmptyList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitEmptyList(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitEmptyList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class NonEmptyListContext extends ListContext {
-		public TerminalNode LEFT_ARRAY() { return getToken(Parser_CSS_Python.LEFT_ARRAY, 0); }
+		public TerminalNode LEFT_ARRAY() { return getToken(Parser_Python.LEFT_ARRAY, 0); }
 		public List_itemsContext list_items() {
 			return getRuleContext(List_itemsContext.class,0);
 		}
-		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_CSS_Python.RIGHT_ARRAY, 0); }
+		public TerminalNode RIGHT_ARRAY() { return getToken(Parser_Python.RIGHT_ARRAY, 0); }
 		public NonEmptyListContext(ListContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterNonEmptyList(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterNonEmptyList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitNonEmptyList(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitNonEmptyList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitNonEmptyList(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitNonEmptyList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2814,9 +2814,9 @@ public class Parser_CSS_Python extends Parser {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Parser_CSS_Python.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(Parser_Python.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Parser_CSS_Python.COMMA, i);
+			return getToken(Parser_Python.COMMA, i);
 		}
 		public List_itemsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2824,15 +2824,15 @@ public class Parser_CSS_Python extends Parser {
 		@Override public int getRuleIndex() { return RULE_list_items; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).enterList_items(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).enterList_items(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Parser_CSS_PythonListener ) ((Parser_CSS_PythonListener)listener).exitList_items(this);
+			if ( listener instanceof Parser_PythonListener ) ((Parser_PythonListener)listener).exitList_items(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Parser_CSS_PythonVisitor ) return ((Parser_CSS_PythonVisitor<? extends T>)visitor).visitList_items(this);
+			if ( visitor instanceof Parser_PythonVisitor ) return ((Parser_PythonVisitor<? extends T>)visitor).visitList_items(this);
 			else return visitor.visitChildren(this);
 		}
 	}
