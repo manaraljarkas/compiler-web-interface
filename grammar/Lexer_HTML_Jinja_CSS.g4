@@ -1,4 +1,4 @@
-lexer grammar Lexer_HTML_Jinja;
+lexer grammar Lexer_HTML_Jinja_CSS;
 
 tokens { IDENTIFIER }
 
@@ -12,7 +12,12 @@ JINJA_OPEN_STMT : '{%' -> pushMode(JINJA) ;
 TEXT
     : (~[<{] | '{' ~[{%])+
     ;
-
+STYLE_OPEN
+    : '<style>' -> pushMode(CSS)
+    ;
+STYLE_CLOSE
+    : '</style>'
+    ;
 WS : [ \t\r\n]+ -> type(TEXT) ;
 
 /* =====================
@@ -55,3 +60,45 @@ JINJA_IDENTIFIER
     : [a-zA-Z_][a-zA-Z0-9_]* -> type(IDENTIFIER) ;
 
 JINJA_WS : [ \t\r\n]+ -> skip ;
+
+
+/* =====================
+   CSS MODE
+===================== */
+
+mode CSS;
+
+CSS_STYLE_CLOSE
+    : '</style>' -> popMode
+    ;
+
+LEFT_CURLY  : '{' ;
+RIGHT_CURLY : '}' ;
+COLON       : ':' ;
+SEMICOLON   : ';' ;
+COMMA       : ',' ;
+CSS_DOT         : '.' ;
+
+COLOR
+    : '#' [0-9a-fA-F]+
+    ;
+
+UNIT
+    : 'px' | 'em' | 'rem' | '%'
+    ;
+
+NUMBERS
+    : [0-9]+
+    ;
+
+CSS_STRING
+    : '"' ~["]* '"'
+    ;
+
+CHARACTERS
+    : [a-zA-Z_-][a-zA-Z0-9_-]*
+    ;
+
+CSS_WS
+    : [ \t\r\n]+ -> skip
+    ;

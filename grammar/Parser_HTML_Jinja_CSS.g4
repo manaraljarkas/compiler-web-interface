@@ -1,6 +1,6 @@
-parser grammar Parser_HTML_Jinja;
+parser grammar Parser_HTML_Jinja_CSS;
 
-options { tokenVocab=Lexer_HTML_Jinja; }
+options { tokenVocab=Lexer_HTML_Jinja_CSS; }
 
 /* =====================
    ROOT
@@ -17,6 +17,8 @@ document
 node
     : doctype            #DoctypeNode
     | htmlElement        #HtmlNode
+    | htmlVoidElement    #VoidElements_img_input_br_hr
+    | styleElement       #StyleNode
     | jinjaStatement    #JinjaStmtNode
     | jinjaExpression   #JinjaExprNode
     | TEXT              #TextNode
@@ -35,6 +37,13 @@ htmlElement
 doctype
     : LT DOCTYPE
     ;
+styleElement
+    : STYLE_OPEN css_rule* CSS_STYLE_CLOSE
+    ;
+htmlVoidElement
+    : LT IDENTIFIER (IDENTIFIER (EQ (STRING | ATTR_VALUE))?)* GT
+    ;
+
 
 
 /* =====================
@@ -64,4 +73,27 @@ ifCondition
 
 jinjaExpression
     : JINJA_OPEN_EXPR IDENTIFIER (DOT IDENTIFIER)* JINJA_CLOSE_EXPR
+    ;
+
+/* =====================
+   CSS
+   Handles only inline <style> blocks inside HTML
+===================== */
+
+css_rule
+    : css_selector LEFT_CURLY css_property* RIGHT_CURLY
+    ;
+
+css_selector
+    : CHARACTERS
+    | CHARACTERS COLON CHARACTERS   // a:hover
+    | CSS_DOT CHARACTERS
+    ;
+
+css_property
+    : CHARACTERS COLON css_value SEMICOLON
+    ;
+
+css_value
+    : (CHARACTERS | NUMBERS | UNIT | COLOR | CSS_STRING | COMMA)+
     ;
