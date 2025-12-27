@@ -1,6 +1,6 @@
-package ast.expression;
+package ast_Python.expression;
 
-import ast.ASTNode;
+import ast_Python.ASTNode;
 
 public abstract class ExpressionNode extends ASTNode {
 

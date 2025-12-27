@@ -43,7 +43,7 @@ set_function_parameter: CHARACTERS (COMMA CHARACTERS)*;
 //  @app.route("/") @app.route("/products")
 // @app.route("/add", methods=["GET", "POST"])
 // @app.route("/products/<int:id>")
-route: AT APP DOT ROUTE route_parameter;
+route: AT CHARACTERS DOT ROUTE route_parameter;
 route_parameter: OPEN_B route_parameter_body CLOSE_B ;
 route_parameter_body: STRING   | STRING COMMA route_parameter_options ;
 route_parameter_options: CHARACTERS EQUAL array | CHARACTERS EQUAL CHARACTERS ;
@@ -108,4 +108,3 @@ for_loop: FOR CHARACTERS IN CHARACTERS Colon NEWLINE INDENT statement_in_functio
 list: LEFT_ARRAY   RIGHT_ARRAY #EmptyList |
      LEFT_ARRAY list_items  RIGHT_ARRAY #NonEmptyList ;
 list_items: expression (COMMA expression)*  ;
-

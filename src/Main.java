@@ -1,24 +1,21 @@
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
 import java.io.IOException;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        CharStream input = CharStreams.fromFileName("C:\\Users\\user\\Desktop\\compiler-web-interface-main\\compiler-web-interface-main\\src\\app.py");
+        // قراءة ملف Python
+        CharStream input = CharStreams.fromFileName("frontend/app.py");
 
+        // Lexer
         Lexer_Python lexer = new Lexer_Python(input);
-
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        tokens.fill();
 
-        List<Token> allTokens = tokens.getTokens();
-        for (Token token : allTokens) {
-            System.out.println(
-                    "Token: " + token.getText() +
-                            "\tType: " + lexer.getVocabulary().getSymbolicName(token.getType()) +
-                            "\tLine: " + token.getLine()
-            );
-        }
+        // Parser
+        Parser_Python parser = new Parser_Python(tokens);
+
+        ParseTree tree = parser.program();
+
     }
 }

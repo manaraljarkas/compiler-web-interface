@@ -19,6 +19,7 @@ def index():
     return redirect(url_for("products"))
 
 
+
 @app.route("/products")
 def products():
     products = load_products()

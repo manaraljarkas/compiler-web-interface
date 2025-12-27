@@ -1,10 +1,9 @@
-package ast;
+package ast_Python;
 
-public class AddProductNode extends ASTNode {
+public class ProgramNode extends ASTNode {
 
-    public AddProductNode(int lineNumber) {
-
-        super("AddProduct", lineNumber);
+    public ProgramNode() {
+        super("Program", 0);
     }
 
     @Override
@@ -21,4 +20,5 @@ public class AddProductNode extends ASTNode {
         }
         return sb.toString();
     }
+   
 }

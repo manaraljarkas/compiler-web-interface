@@ -46,7 +46,6 @@ NUMBERS=45
 CHARACTERS=46
 STRING=47
 WS=48
-APP=49
 'from'=4
 'import'=5
 'LOAD'=6
