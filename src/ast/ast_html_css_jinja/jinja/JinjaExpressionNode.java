@@ -1,4 +1,4 @@
-package ast_html_css_jinja.jinja;
+package ast.ast_html_css_jinja.jinja;
 
 import ast.ASTNode;
 
