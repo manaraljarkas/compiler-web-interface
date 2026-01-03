@@ -168,7 +168,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
             iterable = ctx.IDENTIFIER(1).getText();
         }
         
-        // Add iterable to symbol table (it's referenced from global scope)
+        // Add iterable to symbol table 
         if (!iterable.isEmpty()) {
             Row iterableRow = new Row();
             iterableRow.setName(iterable);
