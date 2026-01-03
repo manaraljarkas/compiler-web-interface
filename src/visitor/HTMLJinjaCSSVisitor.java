@@ -168,15 +168,26 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
             iterable = ctx.IDENTIFIER(1).getText();
         }
         
+        // Add iterable to symbol table (it's referenced from global scope)
+        if (!iterable.isEmpty()) {
+            Row iterableRow = new Row();
+            iterableRow.setName(iterable);
+            iterableRow.setType("JinjaIterable");
+            iterableRow.setValue(null);
+            symbolTable.addRow(iterable, iterableRow);
+        }
+        
         JinjaForNode forNode = new JinjaForNode(variable, iterable, line);
 
         symbolTable.enterScope("for-loop-" + line);
-        Row row = new Row();
-        row.setName(variable);
-        row.setType("variable");
-        row.setValue(null);
-        symbolTable.addRow(variable, row);
-
+        // Add loop variable to symbol table in for-loop scope
+        if (!variable.isEmpty()) {
+            Row row = new Row();
+            row.setName(variable);
+            row.setType("JinjaLoopVariable");
+            row.setValue(iterable);
+            symbolTable.addRow(variable, row);
+        }
 
         // Visit body nodes
         if (ctx.node() != null) {
@@ -205,6 +216,16 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
             }
             
             if (condCtx.IDENTIFIER().size() > 0) {
+                // Add first identifier (variable) to symbol table
+                String varName = condCtx.IDENTIFIER(0).getText();
+                if (!varName.isEmpty() && symbolTable.getRow(varName) == null) {
+                    Row varRow = new Row();
+                    varRow.setName(varName);
+                    varRow.setType("JinjaVariable");
+                    varRow.setValue(null);
+                    symbolTable.addRow(varName, varRow);
+                }
+                
                 for (int i = 0; i < condCtx.IDENTIFIER().size(); i++) {
                     if (i > 0) {
                         condBuilder.append(".");
@@ -237,6 +258,16 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         StringBuilder exprBuilder = new StringBuilder();
         
         if (ctx.IDENTIFIER().size() > 0) {
+            // Add first identifier (variable) to symbol table if not already present
+            String varName = ctx.IDENTIFIER(0).getText();
+            if (!varName.isEmpty() && symbolTable.getRow(varName) == null) {
+                Row varRow = new Row();
+                varRow.setName(varName);
+                varRow.setType("JinjaVariable");
+                varRow.setValue(null);
+                symbolTable.addRow(varName, varRow);
+            }
+            
             for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
                 if (i > 0) {
                     exprBuilder.append(".");
