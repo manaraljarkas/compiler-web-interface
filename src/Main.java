@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
                 // قراءة ملف Python
-                CharStream input = CharStreams.fromFileName("frontend/templates/add_product.html", java.nio.charset.StandardCharsets.UTF_8);
+                CharStream input = CharStreams.fromFileName("src/views.py", java.nio.charset.StandardCharsets.UTF_8);
 
                 // Lexer
                 Lexer_Python lexer = new Lexer_Python(input);
@@ -68,8 +68,9 @@ public class Main {
                 System.out.println("Parse successful!");
         
                 // Visitor
-                HTMLJinjaCSSVisitor visitor = new HTMLJinjaCSSVisitor();
+                PythonASTVisitor visitor = new PythonASTVisitor();
                 ASTNode ast = visitor.visit(tree);
+                visitor.getSymbolTable().print();
         
                 // Print AST
                 if (ast != null) {

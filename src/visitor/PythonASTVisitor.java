@@ -1,5 +1,7 @@
 package visitor;
 
+import SymbolTable.SymbolTable;
+import SymbolTable.Row;
 import gen.Parser_Python;
 import gen.Parser_PythonBaseVisitor;
 import ast.ASTNode;
@@ -10,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
+
+    private SymbolTable symbolTable = new SymbolTable();
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
 
     @Override
     public ASTNode visitProgram(Parser_Python.ProgramContext ctx) {
@@ -123,17 +130,30 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String functionName = ctx.CHARACTERS() != null ? ctx.CHARACTERS().getText() : "";
         
         FunctionNode functionNode = new FunctionNode(functionName, line);
-        
+
+        Row funcRow = new Row();
+        funcRow.setName(functionName);
+        funcRow.setType("Function");
+        symbolTable.addRow(functionName, funcRow);
+
         // Visit function parameters
         if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
             Parser_Python.Set_function_parameterContext paramsCtx = ctx.function_parameter().set_function_parameter();
             for (org.antlr.v4.runtime.tree.TerminalNode param : paramsCtx.CHARACTERS()) {
                 functionNode.addParameter(param.getText());
+
+                // إضافة كل باراميتر للـ SymbolTable داخل scope الدالة
+                Row paramRow = new Row();
+                paramRow.setName(param.getText());
+                paramRow.setType("Parameter");
+                symbolTable.addRow(param.getText(), paramRow);
+
             }
         }
         
         // Visit function body
         if (ctx.function_body() != null) {
+            symbolTable.enterScope(functionName); // ندخل scope الدالة
             Parser_Python.Function_bodyContext bodyCtx = ctx.function_body();
             // Only visit statement_in_function contexts, ignore NEWLINE tokens
             if (bodyCtx.statement_in_function() != null) {
@@ -144,6 +164,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                     }
                 }
             }
+            symbolTable.exitScope(); // نخرج من scope الدالة
         }
         
         return functionNode;
@@ -221,7 +242,14 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 value = (ExpressionNode) result;
             }
         }
-        
+
+        // إضافة المتغير للـ SymbolTable
+        Row row = new Row();
+        row.setName(variable);
+        row.setType("VariableAssign");
+        row.setValue(value != null ? value.toString() : "null");
+        symbolTable.addRow(variable, row);
+
         return new AssignmentNode(line, variable, value);
     }
 
@@ -284,6 +312,14 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         String variable = ctx.CHARACTERS(0).getText();
         String iterable = ctx.CHARACTERS(1).getText();
+
+
+        // إضافة المتغير iterator للـ SymbolTable
+        Row row = new Row();
+        row.setName(variable);
+        row.setType("ForLoopVariable");
+        row.setValue(iterable);
+        symbolTable.addRow(variable, row);
         
         ForNode forNode = new ForNode(variable, iterable, line);
         

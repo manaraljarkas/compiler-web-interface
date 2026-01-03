@@ -1,5 +1,7 @@
 package visitor;
 
+import SymbolTable.SymbolTable;
+import SymbolTable.Row;
 import gen.Parser_HTML_Jinja_CSS;
 import gen.Parser_HTML_Jinja_CSSBaseVisitor;
 import ast.ASTNode;
@@ -9,6 +11,11 @@ import ast.ast_html_css_jinja.css.*;
 import ast.ast_html_css_jinja.jinja.*;
 
 public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNode> {
+
+    private SymbolTable symbolTable = new SymbolTable();
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
 
     @Override
     public ASTNode visitDocument(Parser_HTML_Jinja_CSS.DocumentContext ctx) {
@@ -147,7 +154,15 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         }
         
         JinjaForNode forNode = new JinjaForNode(variable, iterable, line);
-        
+
+        symbolTable.enterScope("for-loop-" + line);
+        Row row = new Row();
+        row.setName(variable);
+        row.setType("variable");
+        row.setValue(null);
+        symbolTable.addRow(variable, row);
+
+
         // Visit body nodes
         if (ctx.node() != null) {
             for (Parser_HTML_Jinja_CSS.NodeContext nodeCtx : ctx.node()) {
@@ -157,7 +172,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 }
             }
         }
-        
+        symbolTable.exitScope();
         return forNode;
     }
 
