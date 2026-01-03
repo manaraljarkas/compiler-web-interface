@@ -90,7 +90,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         
         if (paramCtx != null && paramCtx.route_parameter_body() != null) {
             Parser_Python.Route_parameter_bodyContext bodyCtx = paramCtx.route_parameter_body();
-            String path = bodyCtx.STRING(0).getText();
+            String path = bodyCtx.STRING().getText();
             // Remove quotes
             path = path.substring(1, path.length() - 1);
             
@@ -102,8 +102,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 if (optionsCtx.array() != null) {
                     Parser_Python.ArrayContext arrayCtx = optionsCtx.array();
                     if (arrayCtx.array_items() != null) {
-                        for (Parser_Python.StringContext strCtx : arrayCtx.array_items().STRING()) {
-                            String method = strCtx.getText();
+                        for (org.antlr.v4.runtime.tree.TerminalNode strNode : arrayCtx.array_items().STRING()) {
+                            String method = strNode.getText();
                             method = method.substring(1, method.length() - 1);
                             routeNode.addMethod(method);
                         }
@@ -120,24 +120,28 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitFunction_defination(Parser_Python.Function_definationContext ctx) {
         int line = ctx.getStart().getLine();
-        String functionName = ctx.CHARACTERS(0).getText();
+        String functionName = ctx.CHARACTERS() != null ? ctx.CHARACTERS().getText() : "";
         
         FunctionNode functionNode = new FunctionNode(functionName, line);
         
         // Visit function parameters
         if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
             Parser_Python.Set_function_parameterContext paramsCtx = ctx.function_parameter().set_function_parameter();
-            for (Parser_Python.TerminalNode param : paramsCtx.CHARACTERS()) {
+            for (org.antlr.v4.runtime.tree.TerminalNode param : paramsCtx.CHARACTERS()) {
                 functionNode.addParameter(param.getText());
             }
         }
         
         // Visit function body
         if (ctx.function_body() != null) {
-            for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.function_body().statement_in_function()) {
-                ASTNode result = visit(stmtCtx);
-                if (result instanceof StatementNode) {
-                    functionNode.addStatement((StatementNode) result);
+            Parser_Python.Function_bodyContext bodyCtx = ctx.function_body();
+            // Only visit statement_in_function contexts, ignore NEWLINE tokens
+            if (bodyCtx.statement_in_function() != null) {
+                for (Parser_Python.Statement_in_functionContext stmtCtx : bodyCtx.statement_in_function()) {
+                    ASTNode result = visit(stmtCtx);
+                    if (result instanceof StatementNode) {
+                        functionNode.addStatement((StatementNode) result);
+                    }
                 }
             }
         }
@@ -172,7 +176,12 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx) {
-        return visit(ctx.function_call());
+        ASTNode result = visit(ctx.function_call());
+        if (result instanceof CallNode) {
+            // Wrap function call in a statement node
+            return new FunctionCallStatementNode((CallNode) result);
+        }
+        return result;
     }
 
     @Override
@@ -199,8 +208,12 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitAssignment(Parser_Python.AssignmentContext ctx) {
         int line = ctx.getStart().getLine();
-        String variable = ctx.CHARACTERS(0).getText();
+        String variable = "";
         ExpressionNode value = null;
+        
+        if (ctx.CHARACTERS() != null) {
+            variable = ctx.CHARACTERS().getText();
+        }
         
         if (ctx.expression() != null) {
             ASTNode result = visit(ctx.expression());
@@ -293,21 +306,28 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String alias = "";
         
         if (ctx.with_parameter() != null) {
-            for (Parser_Python.StringContext strCtx : ctx.with_parameter().STRING()) {
-                String file = strCtx.getText();
+            for (org.antlr.v4.runtime.tree.TerminalNode strNode : ctx.with_parameter().STRING()) {
+                String file = strNode.getText();
                 file = file.substring(1, file.length() - 1);
                 files.add(file);
             }
         }
         
-        if (ctx.CHARACTERS() != null) {
+        if (ctx.CHARACTERS() != null && ctx.CHARACTERS().getText() != null) {
             alias = ctx.CHARACTERS().getText();
         }
         
         WithNode withNode = new WithNode(files, alias, line);
         
-        // Note: With statement body would be handled separately if needed
-        // For now, we just create the node
+        // Visit statements in the with block body
+        if (ctx.statement_in_function() != null) {
+            for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
+                ASTNode result = visit(stmtCtx);
+                if (result instanceof StatementNode) {
+                    withNode.addStatement((StatementNode) result);
+                }
+            }
+        }
         
         return withNode;
     }
@@ -347,17 +367,10 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                         }
                     }
                 } else if (argCtx.curly_argument() != null) {
-                    // Handle curly brace arguments
-                    Parser_Python.Curly_argumentContext curlyCtx = argCtx.curly_argument();
-                    if (curlyCtx.curly_items() != null) {
-                        for (Parser_Python.Curly_itemContext itemCtx : curlyCtx.curly_items().curly_item()) {
-                            if (itemCtx.other_expression(1) != null) {
-                                ASTNode result = visit(itemCtx.other_expression(1));
-                                if (result instanceof ExpressionNode) {
-                                    arguments.add((ExpressionNode) result);
-                                }
-                            }
-                        }
+                    // Handle curly brace arguments (dictionary literals)
+                    ASTNode result = visit(argCtx.curly_argument());
+                    if (result instanceof ExpressionNode) {
+                        arguments.add((ExpressionNode) result);
                     }
                 }
             }
@@ -384,7 +397,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             return visit(ctx.index_access());
         } else if (ctx.CHARACTERS() != null) {
             int line = ctx.getStart().getLine();
-            return new NameNode(ctx.CHARACTERS().getText(), line);
+            String name = ctx.CHARACTERS().getText();
+            return name != null ? new NameNode(name, line) : null;
         } else if (ctx.function_name() != null) {
             int line = ctx.getStart().getLine();
             Parser_Python.Function_nameContext nameCtx = ctx.function_name();
@@ -407,9 +421,12 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         } else if (ctx.STRING() != null) {
             int line = ctx.getStart().getLine();
             String value = ctx.STRING().getText();
-            // Remove quotes
-            value = value.substring(1, value.length() - 1);
-            return new StringNode(value, line);
+            if (value != null && value.length() >= 2) {
+                // Remove quotes
+                value = value.substring(1, value.length() - 1);
+                return new StringNode(value, line);
+            }
+            return new StringNode("", line);
         } else if (ctx.function_array() != null) {
             // Handle function_array: function_call[STRING]
             // Treat it as a function call
@@ -421,20 +438,23 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitFunction_array(Parser_Python.Function_arrayContext ctx) {
         // function_array: function_call LEFT_ARRAY STRING RIGHT_ARRAY
-        // Treat as a function call
+        // This handles expressions like json.load(f)["products"]
+        // Return the function call result - index access will be handled at a higher level if needed
         return visit(ctx.function_call());
     }
 
     @Override
     public ASTNode visitIndex_access(Parser_Python.Index_accessContext ctx) {
         int line = ctx.getStart().getLine();
-        String variableName = ctx.CHARACTERS().getText();
+        String variableName = ctx.CHARACTERS() != null ? ctx.CHARACTERS().getText() : "";
         String index = "";
         
         if (ctx.STRING() != null) {
-            index = ctx.STRING().getText();
-            // Remove quotes
-            index = index.substring(1, index.length() - 1);
+            String indexStr = ctx.STRING().getText();
+            if (indexStr != null && indexStr.length() >= 2) {
+                // Remove quotes
+                index = indexStr.substring(1, indexStr.length() - 1);
+            }
         }
         
         return new iIndexAccessNode(variableName, index, line);
@@ -461,5 +481,60 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         }
         
         return new ListNode(elements, line);
+    }
+
+    @Override
+    public ASTNode visitCurly_argument(Parser_Python.Curly_argumentContext ctx) {
+        int line = ctx.getStart().getLine();
+        DictNode dictNode = new DictNode(line);
+        
+        if (ctx.curly_items() != null) {
+            for (Parser_Python.Curly_itemContext itemCtx : ctx.curly_items().curly_item()) {
+                // Handle dictionary item: key: value
+                String key = "";
+                ExpressionNode value = null;
+                
+                if (itemCtx.STRING() != null) {
+                    String keyStr = itemCtx.STRING().getText();
+                    key = keyStr.substring(1, keyStr.length() - 1); // Remove quotes
+                } else if (itemCtx.CHARACTERS() != null) {
+                    key = itemCtx.CHARACTERS().getText();
+                }
+                
+                if (itemCtx.expression() != null) {
+                    ASTNode exprResult = visit(itemCtx.expression());
+                    if (exprResult instanceof ExpressionNode) {
+                        value = (ExpressionNode) exprResult;
+                    }
+                }
+                
+                if (!key.isEmpty()) {
+                    dictNode.addItem(key, value);
+                }
+            }
+        }
+        
+        return dictNode;
+    }
+
+    @Override
+    public ASTNode visitCurly_item(Parser_Python.Curly_itemContext ctx) {
+        // This is handled in visitCurly_argument
+        // Return the expression value for consistency
+        if (ctx.expression() != null) {
+            return visit(ctx.expression());
+        }
+        return null;
+    }
+
+    @Override
+    public ASTNode visitKey_value(Parser_Python.Key_valueContext ctx) {
+        // For key=value arguments in function calls, return the expression value
+        // The key name information could be preserved in a future enhancement
+        if (ctx.expression() != null) {
+            ASTNode result = visit(ctx.expression());
+            return result;
+        }
+        return null;
     }
 }

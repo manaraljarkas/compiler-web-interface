@@ -1,4 +1,7 @@
-// Generated from C:/Users/iamgh/compiler-web-interface/grammar/Parser_Python.g4 by ANTLR 4.13.2
+// Generated from grammar/Parser_Python.g4 by ANTLR 4.13.2
+package gen;
+
+
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -88,6 +91,13 @@ public interface Parser_PythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnStmt(Parser_Python.ReturnStmtContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code FunctionCallStmt}
+	 * labeled alternative in {@link Parser_Python#statement_in_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code AssignmentStmt}
 	 * labeled alternative in {@link Parser_Python#statement_in_function}.
 	 * @param ctx the parse tree
@@ -115,13 +125,6 @@ public interface Parser_PythonVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWithStmt(Parser_Python.WithStmtContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code FunctionCallStmt}
-	 * labeled alternative in {@link Parser_Python#statement_in_function}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code BreakStmt}
 	 * labeled alternative in {@link Parser_Python#statement_in_function}.

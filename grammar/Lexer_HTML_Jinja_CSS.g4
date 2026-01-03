@@ -1,5 +1,8 @@
 lexer grammar Lexer_HTML_Jinja_CSS;
 
+@header {
+}
+
 tokens { IDENTIFIER }
 
 /* =====================

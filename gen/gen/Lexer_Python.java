@@ -1,4 +1,5 @@
-// Generated from D:/Compiler/compiler-web-interface/grammar/Lexer_Python.g4 by ANTLR 4.13.2
+// Generated from grammar/Lexer_Python.g4 by ANTLR 4.13.2
+package gen;
 
 import java.util.Stack;
 import java.util.LinkedList;
@@ -168,17 +169,12 @@ public class Lexer_Python extends Lexer {
 	            if (spaces > prevIndent) {
 	                indents.push(spaces);
 	                emitToken(INDENT);
-	                queue.add(next); // Add NEWLINE to queue after INDENT
-	                return queue.poll(); // Return INDENT first, NEWLINE will come next
 	            }
 	            else if (spaces < prevIndent) {
 	                while (!indents.isEmpty() && indents.peek() > spaces) {
 	                    indents.pop();
 	                    emitToken(DEDENT);
 	                }
-	                queue.add(next); // Add NEWLINE to queue after DEDENT tokens
-	                // Return DEDENT token first if we have one, then NEWLINE on next call
-	                return queue.isEmpty() ? next : queue.poll();
 	            }
 	            // If spaces == prevIndent, just return the NEWLINE (no INDENT/DEDENT needed)
 	        }

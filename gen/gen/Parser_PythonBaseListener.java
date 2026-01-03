@@ -1,4 +1,7 @@
-// Generated from C:/Users/iamgh/compiler-web-interface/grammar/Parser_Python.g4 by ANTLR 4.13.2
+// Generated from grammar/Parser_Python.g4 by ANTLR 4.13.2
+package gen;
+
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -160,6 +163,18 @@ public class Parser_PythonBaseListener implements Parser_PythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAssignmentStmt(Parser_Python.AssignmentStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -203,18 +218,6 @@ public class Parser_PythonBaseListener implements Parser_PythonListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitWithStmt(Parser_Python.WithStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

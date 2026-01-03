@@ -1,4 +1,7 @@
-// Generated from C:/Users/iamgh/compiler-web-interface/grammar/Parser_Python.g4 by ANTLR 4.13.2
+// Generated from grammar/Parser_Python.g4 by ANTLR 4.13.2
+package gen;
+
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -139,6 +142,18 @@ public interface Parser_PythonListener extends ParseTreeListener {
 	 */
 	void exitReturnStmt(Parser_Python.ReturnStmtContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code FunctionCallStmt}
+	 * labeled alternative in {@link Parser_Python#statement_in_function}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code FunctionCallStmt}
+	 * labeled alternative in {@link Parser_Python#statement_in_function}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code AssignmentStmt}
 	 * labeled alternative in {@link Parser_Python#statement_in_function}.
 	 * @param ctx the parse tree
@@ -186,18 +201,6 @@ public interface Parser_PythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitWithStmt(Parser_Python.WithStmtContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code FunctionCallStmt}
-	 * labeled alternative in {@link Parser_Python#statement_in_function}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code FunctionCallStmt}
-	 * labeled alternative in {@link Parser_Python#statement_in_function}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunctionCallStmt(Parser_Python.FunctionCallStmtContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code BreakStmt}
 	 * labeled alternative in {@link Parser_Python#statement_in_function}.

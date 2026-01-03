@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.*;
 @members {
     Stack<Integer> indents = new Stack<>();
     LinkedList<Token> queue = new LinkedList<>();
+    boolean eofProcessed = false;
 
 void emitToken(int type) {
     CommonToken t = new CommonToken(
@@ -39,6 +40,18 @@ void emitToken(int type) {
 
         Token next = super.nextToken();
 
+        // Handle EOF - emit DEDENT tokens for any remaining indent levels
+        if (next.getType() == Token.EOF) {
+            if (!eofProcessed) {
+                eofProcessed = true;
+                while (!indents.isEmpty()) {
+                    indents.pop();
+                    emitToken(DEDENT);
+                }
+            }
+            return queue.isEmpty() ? next : queue.poll();
+        }
+
         if (next.getType() == NEWLINE) {
             String nlText = next.getText();
             int spaces = 0;
@@ -56,13 +69,19 @@ void emitToken(int type) {
             if (spaces > prevIndent) {
                 indents.push(spaces);
                 emitToken(INDENT);
+                queue.add(next); // Add NEWLINE to queue after INDENT
+                return queue.poll(); // Return INDENT first, NEWLINE will come next
             }
             else if (spaces < prevIndent) {
                 while (!indents.isEmpty() && indents.peek() > spaces) {
                     indents.pop();
                     emitToken(DEDENT);
                 }
+                queue.add(next); // Add NEWLINE to queue after DEDENT tokens
+                // Return DEDENT token first if we have one, then NEWLINE on next call
+                return queue.isEmpty() ? next : queue.poll();
             }
+            // If spaces == prevIndent, just return the NEWLINE (no INDENT/DEDENT needed)
         }
 
         return next;

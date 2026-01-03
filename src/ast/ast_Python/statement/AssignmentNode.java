@@ -28,7 +28,12 @@ public class AssignmentNode extends StatementNode {
                 .append(variable)
                 .append("\n");
 
-        sb.append(value.toString(level + 1));
+        if (value != null) {
+            sb.append(value.toString(level + 1));
+        } else {
+            sb.append(indent(level + 1))
+                    .append("Value: <null>\n");
+        }
 
         return sb.toString();
     }

@@ -7,8 +7,6 @@ import ast.ast_html_css_jinja.DocumentNode;
 import ast.ast_html_css_jinja.html.*;
 import ast.ast_html_css_jinja.css.*;
 import ast.ast_html_css_jinja.jinja.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNode> {
 
@@ -264,8 +262,8 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         String name = "";
         String value = "";
         
-        if (ctx.CHARACTERS().size() > 0) {
-            name = ctx.CHARACTERS(0).getText();
+        if (ctx.CHARACTERS() != null) {
+            name = ctx.CHARACTERS().getText();
         }
         
         if (ctx.css_value() != null) {
