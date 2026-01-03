@@ -8,10 +8,15 @@ public class HtmlElementNode extends ASTNode {
 
     private String tagName;
     private List<ASTNode> children = new ArrayList<>();
+    private int closingTagLine = -1; // -1 means not set
 
     public HtmlElementNode(String tagName, int line) {
         super("HtmlElement", line);
         this.tagName = tagName;
+    }
+
+    public void setClosingTagLine(int line) {
+        this.closingTagLine = line;
     }
 
     public void addChild(ASTNode node) {
@@ -24,7 +29,12 @@ public class HtmlElementNode extends ASTNode {
         sb.append(indent(level))
                 .append(nodeName)
                 .append(" <").append(tagName).append(">")
-                .append(" (line ").append(lineNumber).append(")\n");
+                .append(" (line ").append(lineNumber).append(")");
+        
+        if (closingTagLine > 0) {
+            sb.append(" - </").append(tagName).append("> (line ").append(closingTagLine).append(")");
+        }
+        sb.append("\n");
 
         for (ASTNode c : children) {
             sb.append(c.toString(level + 1));
