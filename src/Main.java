@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
                 // قراءة ملف HTML
-                CharStream input = CharStreams.fromFileName("frontend/templates/products.html", java.nio.charset.StandardCharsets.UTF_8);
+                CharStream input = CharStreams.fromFileName("frontend/templates/product_details.html", java.nio.charset.StandardCharsets.UTF_8);
 
                 // Lexer
                 Lexer_HTML_Jinja_CSS lexer = new Lexer_HTML_Jinja_CSS(input);

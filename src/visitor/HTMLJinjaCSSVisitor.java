@@ -60,6 +60,13 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitTextNode(Parser_HTML_Jinja_CSS.TextNodeContext ctx) {
         int line = ctx.getStart().getLine();
         String text = ctx.TEXT().getText();
+        
+        // Filter out whitespace-only text nodes (newlines, spaces, tabs)
+        // These are typically formatting whitespace around closing tags
+        if (text.trim().isEmpty()) {
+            return null;
+        }
+        
         return new TextNode(text, line);
     }
 
@@ -74,7 +81,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         int line = ctx.getStart().getLine();
         String tagName = "";
         
-        // Extract tag name from first IDENTIFIER after LT
+        // Extract tag name from first IDENTIFIER after LT (opening tag)
         if (ctx.IDENTIFIER().size() > 0) {
             tagName = ctx.IDENTIFIER(0).getText();
         }
@@ -91,6 +98,14 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                     elementNode.addChild(result);
                 }
             }
+        }
+        
+        // Extract closing tag line number
+        // The grammar structure: LT IDENTIFIER ... GT node* LT SLASH IDENTIFIER GT
+        // The last IDENTIFIER is the closing tag name, and we can get its line from the stop token
+        if (ctx.getStop() != null) {
+            // Get the line from the GT token after the closing tag
+            elementNode.setClosingTagLine(ctx.getStop().getLine());
         }
         
         return elementNode;
