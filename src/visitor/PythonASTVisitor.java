@@ -229,28 +229,22 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitAssignment(Parser_Python.AssignmentContext ctx) {
         int line = ctx.getStart().getLine();
-        String variable = "";
-        ExpressionNode value = null;
-        
-        if (ctx.CHARACTERS() != null) {
-            variable = ctx.CHARACTERS().getText();
+    
+        if (ctx.CHARACTERS() == null) {
+            return null;
         }
-        
-        if (ctx.expression() != null) {
-            ASTNode result = visit(ctx.expression());
-            if (result instanceof ExpressionNode) {
-                value = (ExpressionNode) result;
-            }
+    
+        String variable = ctx.CHARACTERS().getText();
+            if (ctx.expression() == null) {
+            return null;
         }
-
-        // إضافة المتغير للـ SymbolTable
-        Row row = new Row();
-        row.setName(variable);
-        row.setType("VariableAssign");
-        row.setValue(value != null ? value.toString() : "null");
-        symbolTable.addRow(variable, row);
-
-        return new AssignmentNode(line, variable, value);
+    
+        ASTNode result = visit(ctx.expression());
+        if (!(result instanceof ExpressionNode)) {
+            return null;
+        }
+    
+        return new AssignmentNode(line, variable, (ExpressionNode) result);
     }
 
     @Override
