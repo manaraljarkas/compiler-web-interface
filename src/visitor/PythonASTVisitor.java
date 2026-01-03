@@ -142,7 +142,6 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             for (org.antlr.v4.runtime.tree.TerminalNode param : paramsCtx.CHARACTERS()) {
                 functionNode.addParameter(param.getText());
 
-                // إضافة كل باراميتر للـ SymbolTable داخل scope الدالة
                 Row paramRow = new Row();
                 paramRow.setName(param.getText());
                 paramRow.setType("Parameter");
@@ -164,7 +163,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                     }
                 }
             }
-            symbolTable.exitScope(); // نخرج من scope الدالة
+            symbolTable.exitScope();
         }
         
         return functionNode;
@@ -243,7 +242,11 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         if (!(result instanceof ExpressionNode)) {
             return null;
         }
-    
+        Row row = new Row();
+        row.setName(variable);
+        row.setType("VariableAssign");
+        row.setValue(variable != null ? variable.toString() : "null");
+        symbolTable.addRow(variable, row);
         return new AssignmentNode(line, variable, (ExpressionNode) result);
     }
 
@@ -307,8 +310,6 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String variable = ctx.CHARACTERS(0).getText();
         String iterable = ctx.CHARACTERS(1).getText();
 
-
-        // إضافة المتغير iterator للـ SymbolTable
         Row row = new Row();
         row.setName(variable);
         row.setType("ForLoopVariable");
