@@ -1,4 +1,4 @@
-// Generated from grammar/Parser_Python.g4 by ANTLR 4.13.2
+// Generated from C:/Users/user/compiler-web-interface/grammar/Parser_Python.g4 by ANTLR 4.13.2
 package gen;
 
 

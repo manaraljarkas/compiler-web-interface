@@ -39,10 +39,7 @@ def add():
                 new_id = p["id"]
         new_id += 1
 
-        products.append({
-            "id": new_id,"name": name,"price": price,
-            "description": description,"image": image
-        })
+        products.append({ "id": new_id,"name": name,"price": price,"description": description,"image": image})
         save_products(products)
         return redirect(url_for("products"))
     return render_template("add_product.html")

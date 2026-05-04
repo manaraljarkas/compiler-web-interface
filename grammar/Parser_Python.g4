@@ -7,7 +7,8 @@ parser grammar Parser_Python;
 
 options { tokenVocab=Lexer_Python; }
 
-program: (NEWLINE | statement)* EOF;
+
+program: (statement | NEWLINE)* EOF;
 
 statement
     : import_statement        #ImportStmt
@@ -20,8 +21,8 @@ statement
 
 //imports
 import_statement: import_flask | import_json ;
-import_flask: FROM CHARACTERS IMPORT CHARACTERS (COMMA CHARACTERS)* NEWLINE? ;
-import_json: IMPORT_JSON NEWLINE?;
+import_flask: FROM CHARACTERS IMPORT CHARACTERS (COMMA CHARACTERS)* (NEWLINE | EOF) ;
+import_json: IMPORT CHARACTERS NEWLINE?;
 
 // def save_products(products):
 function_defination:
@@ -63,16 +64,16 @@ array_items: STRING (COMMA STRING)* ;
 // return json.load(f)["products"]
 //  json.dump({"products": products}, f, indent=4)
 return_statement: RETURN expression NEWLINE? ;
-function_call:  function_name OPEN_B argument_list? CLOSE_B NEWLINE?;
+function_call: function_name OPEN_B (NEWLINE)* argument_list? (NEWLINE)* CLOSE_B ;
 function_name: CHARACTERS (DOT CHARACTERS)* ;
 argument_list: argument (COMMA (NEWLINE* argument))*;
-argument: key_value | curly_argument | expression ;
+argument: key_value | expression ;
 key_value: (CHARACTERS | DEFAULT) EQUAL expression ;
 function_array: function_call LEFT_ARRAY STRING RIGHT_ARRAY;
 curly_argument: LEFT_CURLY curly_items? RIGHT_CURLY;
 curly_items: curly_item (COMMA (NEWLINE* curly_item))* ;
 curly_item: (STRING | CHARACTERS) Colon expression;
-expression:  other_expression | list | curly_argument;
+expression: curly_argument | list | other_expression ;
 
 other_expression:
     function_array

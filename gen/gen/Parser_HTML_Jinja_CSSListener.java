@@ -1,4 +1,4 @@
-// Generated from grammar/Parser_HTML_Jinja_CSS.g4 by ANTLR 4.13.2
+// Generated from C:/Users/user/compiler-web-interface/grammar/Parser_HTML_Jinja_CSS.g4 by ANTLR 4.13.2
 package gen;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 

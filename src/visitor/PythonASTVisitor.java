@@ -368,7 +368,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         String functionName = "";
         List<ExpressionNode> arguments = new ArrayList<>();
-        
+
         if (ctx.function_name() != null) {
             Parser_Python.Function_nameContext nameCtx = ctx.function_name();
             StringBuilder nameBuilder = new StringBuilder();
@@ -380,16 +380,17 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             }
             functionName = nameBuilder.toString();
         }
-        
+
         if (ctx.argument_list() != null) {
             for (Parser_Python.ArgumentContext argCtx : ctx.argument_list().argument()) {
+
                 if (argCtx.expression() != null) {
                     ASTNode result = visit(argCtx.expression());
                     if (result instanceof ExpressionNode) {
                         arguments.add((ExpressionNode) result);
                     }
-                } else if (argCtx.key_value() != null) {
-                    // Handle key=value arguments
+                }
+                else if (argCtx.key_value() != null) {
                     Parser_Python.Key_valueContext kvCtx = argCtx.key_value();
                     if (kvCtx.expression() != null) {
                         ASTNode result = visit(kvCtx.expression());
@@ -397,16 +398,10 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                             arguments.add((ExpressionNode) result);
                         }
                     }
-                } else if (argCtx.curly_argument() != null) {
-                    // Handle curly brace arguments (dictionary literals)
-                    ASTNode result = visit(argCtx.curly_argument());
-                    if (result instanceof ExpressionNode) {
-                        arguments.add((ExpressionNode) result);
-                    }
                 }
             }
         }
-        
+
         return new CallNode(functionName, arguments, line);
     }
 
