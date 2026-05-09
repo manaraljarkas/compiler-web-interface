@@ -12,13 +12,80 @@ import ast.ast_html_css_jinja.jinja.*;
 
 public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNode> {
 
-    private SymbolTable symbolTable = new SymbolTable();
+    private final SymbolTable symbolTable = new SymbolTable();
+    private SymbolTable currentScope = symbolTable;
+
     public SymbolTable getSymbolTable() {
         return symbolTable;
     }
 
+    private void enterScope(String scopeName) {
+        currentScope = currentScope.enterScope(scopeName);
+    }
+
+    private void exitScope() {
+        currentScope = currentScope.exitScope();
+    }
+
+    private void defineSymbol(String name, String type, String value) {
+        Row row = new Row();
+        row.setName(name);
+        row.setType(type);
+        row.setValue(value);
+        currentScope.define(row);
+    }
+
+    private void resolveSymbol(String name) {
+        currentScope.resolve(name);
+    }
+
+    private String resolveIdentifierChain(Parser_HTML_Jinja_CSS.IfConditionContext ctx) {
+        StringBuilder condBuilder = new StringBuilder();
+
+        if (ctx.NOT() != null) {
+            condBuilder.append("not ");
+        }
+
+        if (ctx.IDENTIFIER().size() > 0) {
+            String firstIdentifier = ctx.IDENTIFIER(0).getText();
+            if (!firstIdentifier.isEmpty()) {
+                resolveSymbol(firstIdentifier);
+            }
+
+            for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
+                if (i > 0) {
+                    condBuilder.append(".");
+                }
+                condBuilder.append(ctx.IDENTIFIER(i).getText());
+            }
+        }
+
+        return condBuilder.toString();
+    }
+
+    private String resolveIdentifierChain(Parser_HTML_Jinja_CSS.JinjaExpressionContext ctx) {
+        StringBuilder exprBuilder = new StringBuilder();
+
+        if (ctx.IDENTIFIER().size() > 0) {
+            String firstIdentifier = ctx.IDENTIFIER(0).getText();
+            if (!firstIdentifier.isEmpty()) {
+                resolveSymbol(firstIdentifier);
+            }
+
+            for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
+                if (i > 0) {
+                    exprBuilder.append(".");
+                }
+                exprBuilder.append(ctx.IDENTIFIER(i).getText());
+            }
+        }
+
+        return exprBuilder.toString();
+    }
+
     @Override
     public ASTNode visitDocument(Parser_HTML_Jinja_CSS.DocumentContext ctx) {
+        currentScope = symbolTable;
         DocumentNode document = new DocumentNode(ctx.getStart().getLine());
         
         if (ctx.node() != null) {
@@ -167,38 +234,31 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
             variable = ctx.IDENTIFIER(0).getText();
             iterable = ctx.IDENTIFIER(1).getText();
         }
-        
-        // Add iterable to symbol table 
+
         if (!iterable.isEmpty()) {
-            Row iterableRow = new Row();
-            iterableRow.setName(iterable);
-            iterableRow.setType("JinjaIterable");
-            iterableRow.setValue(null);
-            symbolTable.addRow(iterable, iterableRow);
+            resolveSymbol(iterable);
         }
         
         JinjaForNode forNode = new JinjaForNode(variable, iterable, line);
 
-        symbolTable.enterScope("for-loop-" + line);
-        // Add loop variable to symbol table in for-loop scope
-        if (!variable.isEmpty()) {
-            Row row = new Row();
-            row.setName(variable);
-            row.setType("JinjaLoopVariable");
-            row.setValue(iterable);
-            symbolTable.addRow(variable, row);
-        }
+        enterScope("jinja-for@" + line);
+        try {
+            if (!variable.isEmpty()) {
+                defineSymbol(variable, "JinjaLoopVariable", iterable);
+            }
 
-        // Visit body nodes
-        if (ctx.node() != null) {
-            for (Parser_HTML_Jinja_CSS.NodeContext nodeCtx : ctx.node()) {
-                ASTNode result = visit(nodeCtx);
-                if (result != null) {
-                    forNode.addNode(result);
+            // Visit body nodes
+            if (ctx.node() != null) {
+                for (Parser_HTML_Jinja_CSS.NodeContext nodeCtx : ctx.node()) {
+                    ASTNode result = visit(nodeCtx);
+                    if (result != null) {
+                        forNode.addNode(result);
+                    }
                 }
             }
+        } finally {
+            exitScope();
         }
-        symbolTable.exitScope();
         return forNode;
     }
 
@@ -208,45 +268,24 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         String condition = "";
         
         if (ctx.ifCondition() != null) {
-            Parser_HTML_Jinja_CSS.IfConditionContext condCtx = ctx.ifCondition();
-            StringBuilder condBuilder = new StringBuilder();
-            
-            if (condCtx.NOT() != null) {
-                condBuilder.append("not ");
-            }
-            
-            if (condCtx.IDENTIFIER().size() > 0) {
-                // Add first identifier (variable) to symbol table
-                String varName = condCtx.IDENTIFIER(0).getText();
-                if (!varName.isEmpty() && symbolTable.getRow(varName) == null) {
-                    Row varRow = new Row();
-                    varRow.setName(varName);
-                    varRow.setType("JinjaVariable");
-                    varRow.setValue(null);
-                    symbolTable.addRow(varName, varRow);
-                }
-                
-                for (int i = 0; i < condCtx.IDENTIFIER().size(); i++) {
-                    if (i > 0) {
-                        condBuilder.append(".");
-                    }
-                    condBuilder.append(condCtx.IDENTIFIER(i).getText());
-                }
-            }
-            
-            condition = condBuilder.toString();
+            condition = resolveIdentifierChain(ctx.ifCondition());
         }
         
         JinjaIfNode ifNode = new JinjaIfNode(condition, line);
-        
-        // Visit body nodes
-        if (ctx.node() != null) {
-            for (Parser_HTML_Jinja_CSS.NodeContext nodeCtx : ctx.node()) {
-                ASTNode result = visit(nodeCtx);
-                if (result != null) {
-                    ifNode.addNode(result);
+
+        enterScope("jinja-if@" + line);
+        try {
+            // Visit body nodes
+            if (ctx.node() != null) {
+                for (Parser_HTML_Jinja_CSS.NodeContext nodeCtx : ctx.node()) {
+                    ASTNode result = visit(nodeCtx);
+                    if (result != null) {
+                        ifNode.addNode(result);
+                    }
                 }
             }
+        } finally {
+            exitScope();
         }
         
         return ifNode;
@@ -255,28 +294,9 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     @Override
     public ASTNode visitJinjaExpression(Parser_HTML_Jinja_CSS.JinjaExpressionContext ctx) {
         int line = ctx.getStart().getLine();
-        StringBuilder exprBuilder = new StringBuilder();
-        
-        if (ctx.IDENTIFIER().size() > 0) {
-            // Add first identifier (variable) to symbol table if not already present
-            String varName = ctx.IDENTIFIER(0).getText();
-            if (!varName.isEmpty() && symbolTable.getRow(varName) == null) {
-                Row varRow = new Row();
-                varRow.setName(varName);
-                varRow.setType("JinjaVariable");
-                varRow.setValue(null);
-                symbolTable.addRow(varName, varRow);
-            }
-            
-            for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
-                if (i > 0) {
-                    exprBuilder.append(".");
-                }
-                exprBuilder.append(ctx.IDENTIFIER(i).getText());
-            }
-        }
-        
-        return new JinjaExpressionNode(exprBuilder.toString(), line);
+        String expression = resolveIdentifierChain(ctx);
+
+        return new JinjaExpressionNode(expression, line);
     }
 
     @Override

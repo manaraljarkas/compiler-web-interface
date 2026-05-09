@@ -13,13 +13,89 @@ import java.util.List;
 
 public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
 
-    private SymbolTable symbolTable = new SymbolTable();
+    private final SymbolTable symbolTable = new SymbolTable();
+    private SymbolTable currentScope = symbolTable;
+
     public SymbolTable getSymbolTable() {
         return symbolTable;
     }
 
+    public PythonASTVisitor() {
+        defineGlobalSymbol("__name__", "Builtin", "__main__");
+        defineGlobalSymbol("None", "BuiltinLiteral", null);
+        defineGlobalSymbol("True", "BuiltinLiteral", "True");
+        defineGlobalSymbol("False", "BuiltinLiteral", "False");
+    }
+
+    private void enterScope(String scopeName) {
+        currentScope = currentScope.enterScope(scopeName);
+    }
+
+    private void exitScope() {
+        currentScope = currentScope.exitScope();
+    }
+
+    private void defineGlobalSymbol(String name, String type, String value) {
+        Row row = new Row();
+        row.setName(name);
+        row.setType(type);
+        row.setValue(value);
+        symbolTable.define(row);
+    }
+
+    private void defineSymbol(String name, String type, String value) {
+        Row row = new Row();
+        row.setName(name);
+        row.setType(type);
+        row.setValue(value);
+        currentScope.define(row);
+    }
+
+    private void assignSymbol(String name, String type, String value) {
+        Row existing = currentScope.getRowInCurrentScope(name);
+        if (existing != null) {
+            existing.setType(type);
+            existing.setValue(value);
+            return;
+        }
+
+        Row row = new Row();
+        row.setName(name);
+        row.setType(type);
+        row.setValue(value);
+        currentScope.addRow(name, row);
+    }
+
+    private void resolveSymbol(String name) {
+        if (name == null || isPythonLiteralName(name)) {
+            return;
+        }
+        currentScope.resolve(name);
+    }
+
+    private boolean isPythonLiteralName(String name) {
+        return "None".equals(name) || "True".equals(name) || "False".equals(name);
+    }
+
+    private String buildQualifiedName(Parser_Python.Function_nameContext nameCtx) {
+        StringBuilder nameBuilder = new StringBuilder();
+        for (int i = 0; i < nameCtx.CHARACTERS().size(); i++) {
+            if (i > 0) {
+                nameBuilder.append(".");
+            }
+            nameBuilder.append(nameCtx.CHARACTERS(i).getText());
+        }
+
+        if (nameCtx.CHARACTERS().size() > 0) {
+            resolveSymbol(nameCtx.CHARACTERS(0).getText());
+        }
+
+        return nameBuilder.toString();
+    }
+
     @Override
     public ASTNode visitProgram(Parser_Python.ProgramContext ctx) {
+        currentScope = symbolTable;
         ProgramNode program = new ProgramNode(ctx.getStart().getLine());
         
         if (ctx.statement() != null) {
@@ -78,6 +154,11 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         for (int i = 1; i < ctx.CHARACTERS().size(); i++) {
             importedNames.add(ctx.CHARACTERS(i).getText());
         }
+
+        defineSymbol(moduleName, "ImportModule", moduleName);
+        for (String importedName : importedNames) {
+            defineSymbol(importedName, "Import", moduleName);
+        }
         
         return new ImportNode(moduleName, importedNames, line);
     }
@@ -87,6 +168,9 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         List<String> importedNames = new ArrayList<>();
         importedNames.add("json");
+
+        defineSymbol("json", "ImportModule", "json");
+
         return new ImportNode("json", importedNames, line);
     }
 
@@ -131,39 +215,38 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         
         FunctionNode functionNode = new FunctionNode(functionName, line);
 
-        Row funcRow = new Row();
-        funcRow.setName(functionName);
-        funcRow.setType("Function");
-        symbolTable.addRow(functionName, funcRow);
-
-        // Visit function parameters
-        if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
-            Parser_Python.Set_function_parameterContext paramsCtx = ctx.function_parameter().set_function_parameter();
-            for (org.antlr.v4.runtime.tree.TerminalNode param : paramsCtx.CHARACTERS()) {
-                functionNode.addParameter(param.getText());
-
-                Row paramRow = new Row();
-                paramRow.setName(param.getText());
-                paramRow.setType("Parameter");
-                symbolTable.addRow(param.getText(), paramRow);
-
-            }
+        if (!functionName.isEmpty()) {
+            defineSymbol(functionName, "Function", null);
         }
-        
-        // Visit function body
-        if (ctx.function_body() != null) {
-            symbolTable.enterScope(functionName); // ندخل scope الدالة
-            Parser_Python.Function_bodyContext bodyCtx = ctx.function_body();
-            // Only visit statement_in_function contexts, ignore NEWLINE tokens
-            if (bodyCtx.statement_in_function() != null) {
-                for (Parser_Python.Statement_in_functionContext stmtCtx : bodyCtx.statement_in_function()) {
-                    ASTNode result = visit(stmtCtx);
-                    if (result instanceof StatementNode) {
-                        functionNode.addStatement((StatementNode) result);
+
+        enterScope(functionName.isEmpty() ? "function@" + line : functionName);
+
+        try {
+            // Visit function parameters in the function scope
+            if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
+                Parser_Python.Set_function_parameterContext paramsCtx = ctx.function_parameter().set_function_parameter();
+                for (org.antlr.v4.runtime.tree.TerminalNode param : paramsCtx.CHARACTERS()) {
+                    functionNode.addParameter(param.getText());
+
+                    defineSymbol(param.getText(), "Parameter", functionName);
+                }
+            }
+
+            // Visit function body
+            if (ctx.function_body() != null) {
+                Parser_Python.Function_bodyContext bodyCtx = ctx.function_body();
+                // Only visit statement_in_function contexts, ignore NEWLINE tokens
+                if (bodyCtx.statement_in_function() != null) {
+                    for (Parser_Python.Statement_in_functionContext stmtCtx : bodyCtx.statement_in_function()) {
+                        ASTNode result = visit(stmtCtx);
+                        if (result instanceof StatementNode) {
+                            functionNode.addStatement((StatementNode) result);
+                        }
                     }
                 }
             }
-            symbolTable.exitScope();
+        } finally {
+            exitScope();
         }
         
         return functionNode;
@@ -242,11 +325,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         if (!(result instanceof ExpressionNode)) {
             return null;
         }
-        Row row = new Row();
-        row.setName(variable);
-        row.setType("VariableAssign");
-        row.setValue(variable != null ? variable.toString() : "null");
-        symbolTable.addRow(variable, row);
+        String value = ctx.expression().getText();
+        assignSymbol(variable, "VariableAssign", value);
         return new AssignmentNode(line, variable, (ExpressionNode) result);
     }
 
@@ -263,14 +343,19 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         }
         
         IfNode ifNode = new IfNode(condition, line);
-        
-        if (ctx.statement_in_function() != null) {
-            for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
-                ASTNode result = visit(stmtCtx);
-                if (result instanceof StatementNode) {
-                    ifNode.addStatement((StatementNode) result);
+
+        enterScope("if@" + line);
+        try {
+            if (ctx.statement_in_function() != null) {
+                for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
+                    ASTNode result = visit(stmtCtx);
+                    if (result instanceof StatementNode) {
+                        ifNode.addStatement((StatementNode) result);
+                    }
                 }
             }
+        } finally {
+            exitScope();
         }
         
         return ifNode;
@@ -310,21 +395,24 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String variable = ctx.CHARACTERS(0).getText();
         String iterable = ctx.CHARACTERS(1).getText();
 
-        Row row = new Row();
-        row.setName(variable);
-        row.setType("ForLoopVariable");
-        row.setValue(iterable);
-        symbolTable.addRow(variable, row);
+        resolveSymbol(iterable);
         
         ForNode forNode = new ForNode(variable, iterable, line);
-        
-        if (ctx.statement_in_function() != null) {
-            for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
-                ASTNode result = visit(stmtCtx);
-                if (result instanceof StatementNode) {
-                    forNode.addStatement((StatementNode) result);
+
+        enterScope("for@" + line);
+        try {
+            defineSymbol(variable, "ForLoopVariable", iterable);
+
+            if (ctx.statement_in_function() != null) {
+                for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
+                    ASTNode result = visit(stmtCtx);
+                    if (result instanceof StatementNode) {
+                        forNode.addStatement((StatementNode) result);
+                    }
                 }
             }
+        } finally {
+            exitScope();
         }
         
         return forNode;
@@ -349,15 +437,24 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         }
         
         WithNode withNode = new WithNode(files, alias, line);
-        
-        // Visit statements in the with block body
-        if (ctx.statement_in_function() != null) {
-            for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
-                ASTNode result = visit(stmtCtx);
-                if (result instanceof StatementNode) {
-                    withNode.addStatement((StatementNode) result);
+
+        enterScope("with@" + line);
+        try {
+            if (!alias.isEmpty()) {
+                defineSymbol(alias, "WithAlias", files.isEmpty() ? null : files.get(0));
+            }
+
+            // Visit statements in the with block body
+            if (ctx.statement_in_function() != null) {
+                for (Parser_Python.Statement_in_functionContext stmtCtx : ctx.statement_in_function()) {
+                    ASTNode result = visit(stmtCtx);
+                    if (result instanceof StatementNode) {
+                        withNode.addStatement((StatementNode) result);
+                    }
                 }
             }
+        } finally {
+            exitScope();
         }
         
         return withNode;
@@ -424,18 +521,15 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         } else if (ctx.CHARACTERS() != null) {
             int line = ctx.getStart().getLine();
             String name = ctx.CHARACTERS().getText();
+            if (!isPythonLiteralName(name)) {
+                resolveSymbol(name);
+            }
             return name != null ? new NameNode(name, line) : null;
         } else if (ctx.function_name() != null) {
             int line = ctx.getStart().getLine();
             Parser_Python.Function_nameContext nameCtx = ctx.function_name();
-            StringBuilder nameBuilder = new StringBuilder();
-            for (int i = 0; i < nameCtx.CHARACTERS().size(); i++) {
-                if (i > 0) {
-                    nameBuilder.append(".");
-                }
-                nameBuilder.append(nameCtx.CHARACTERS(i).getText());
-            }
-            return new NameNode(nameBuilder.toString(), line);
+            String qualifiedName = buildQualifiedName(nameCtx);
+            return new NameNode(qualifiedName, line);
         } else if (ctx.NUMBERS() != null) {
             int line = ctx.getStart().getLine();
             try {
@@ -474,6 +568,10 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         String variableName = ctx.CHARACTERS() != null ? ctx.CHARACTERS().getText() : "";
         String index = "";
+
+        if (!variableName.isEmpty() && !isPythonLiteralName(variableName)) {
+            resolveSymbol(variableName);
+        }
         
         if (ctx.STRING() != null) {
             String indexStr = ctx.STRING().getText();
