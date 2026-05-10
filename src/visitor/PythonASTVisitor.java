@@ -2,6 +2,8 @@ package visitor;
 
 import SymbolTable.SymbolTable;
 import SymbolTable.Row;
+import errors.ScopeError;
+import errors.UndefinedSymbolError;
 import gen.Parser_Python;
 import gen.Parser_PythonBaseVisitor;
 import ast.ASTNode;
@@ -63,14 +65,15 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         row.setName(name);
         row.setType(type);
         row.setValue(value);
-        currentScope.addRow(name, row);
+        currentScope.define(row);
     }
 
-    private void resolveSymbol(String name) {
+    private void resolveSymbol(String name, int line) {
         if (name == null || isPythonLiteralName(name)) {
             return;
         }
-        currentScope.resolve(name);
+
+        currentScope.resolve(name, line);
     }
 
     private boolean isPythonLiteralName(String name) {
@@ -87,7 +90,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         }
 
         if (nameCtx.CHARACTERS().size() > 0) {
-            resolveSymbol(nameCtx.CHARACTERS(0).getText());
+            resolveSymbol(nameCtx.CHARACTERS(0).getText(), nameCtx.getStart().getLine());
         }
 
         return nameBuilder.toString();
@@ -395,7 +398,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String variable = ctx.CHARACTERS(0).getText();
         String iterable = ctx.CHARACTERS(1).getText();
 
-        resolveSymbol(iterable);
+        resolveSymbol(iterable, line);
         
         ForNode forNode = new ForNode(variable, iterable, line);
 
@@ -522,7 +525,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             int line = ctx.getStart().getLine();
             String name = ctx.CHARACTERS().getText();
             if (!isPythonLiteralName(name)) {
-                resolveSymbol(name);
+                resolveSymbol(name, line);
             }
             return name != null ? new NameNode(name, line) : null;
         } else if (ctx.function_name() != null) {
@@ -570,7 +573,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String index = "";
 
         if (!variableName.isEmpty() && !isPythonLiteralName(variableName)) {
-            resolveSymbol(variableName);
+            resolveSymbol(variableName, line);
         }
         
         if (ctx.STRING() != null) {

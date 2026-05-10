@@ -1,13 +1,18 @@
 package SymbolTable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import errors.ScopeError;
+import errors.UndefinedSymbolError;
 
 public class SymbolTable {
     protected Map<String, Row> rows = new LinkedHashMap<>();
+    private static final Set<String> historyOfDefinedSymbols = new LinkedHashSet<>();
     private final List<SymbolTable> children = new ArrayList<>();
     private final SymbolTable parent;
     private final String scopeName;
@@ -71,6 +76,7 @@ public class SymbolTable {
         }
         row.setScope(getScopePath());
         this.rows.put(symbolName, row);
+        historyOfDefinedSymbols.add(symbolName);
     }
 
     public void define(Row row) {
@@ -86,10 +92,11 @@ public class SymbolTable {
         }
         row.setScope(getScopePath());
         this.rows.put(symbolName, row);
+        historyOfDefinedSymbols.add(symbolName);
     }
 
     public Row getRow(String key) {
-        return resolve(key);
+        return lookup(key);
     }
 
     public Row getRowInCurrentScope(String key) {
@@ -100,21 +107,47 @@ public class SymbolTable {
         return this.rows.containsKey(key);
     }
 
+    public Row lookup(String name) {
+        return lookupInScopeChain(name);
+    }
+
     public Row resolve(String name) {
+        return lookupInScopeChain(name);
+    }
+
+    public Row resolve(String name, int lineNumber) {
+        Row row = lookupInScopeChain(name);
+        if (row != null) {
+            return row;
+        }
+
+        if (name != null && historyOfDefinedSymbols.contains(name)) {
+            throw new ScopeError(name, lineNumber, getScopePath());
+        }
+
+        throw new UndefinedSymbolError(name, lineNumber);
+    }
+
+    public boolean wasEverDefined(String name) {
+        return name != null && historyOfDefinedSymbols.contains(name);
+    }
+
+    public boolean containsInTree(String name) {
         if (name == null) {
-            throw new RuntimeException("Undeclared Variable Error: null");
+            return false;
         }
 
-        Row localRow = this.rows.get(name);
-        if (localRow != null) {
-            return localRow;
+        if (rows.containsKey(name)) {
+            return true;
         }
 
-        if (parent != null) {
-            return parent.resolve(name);
+        for (SymbolTable child : children) {
+            if (child.containsInTree(name)) {
+                return true;
+            }
         }
 
-        throw new RuntimeException("Undeclared Variable Error: " + name);
+        return false;
     }
 
     public Map<String, Row> getAllRows() {
@@ -241,5 +274,22 @@ public class SymbolTable {
             return key;
         }
         return "<anonymous>";
+    }
+
+    private Row lookupInScopeChain(String name) {
+        if (name == null) {
+            return null;
+        }
+
+        Row localRow = this.rows.get(name);
+        if (localRow != null) {
+            return localRow;
+        }
+
+        if (parent != null) {
+            return parent.lookupInScopeChain(name);
+        }
+
+        return null;
     }
 }

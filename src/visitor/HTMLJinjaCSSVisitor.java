@@ -2,6 +2,8 @@ package visitor;
 
 import SymbolTable.SymbolTable;
 import SymbolTable.Row;
+import errors.ScopeError;
+import errors.UndefinedSymbolError;
 import gen.Parser_HTML_Jinja_CSS;
 import gen.Parser_HTML_Jinja_CSSBaseVisitor;
 import ast.ASTNode;
@@ -35,8 +37,12 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         currentScope.define(row);
     }
 
-    private void resolveSymbol(String name) {
-        currentScope.resolve(name);
+    private void resolveSymbol(String name, int line) {
+        if (name == null) {
+            return;
+        }
+
+        currentScope.resolve(name, line);
     }
 
     private String resolveIdentifierChain(Parser_HTML_Jinja_CSS.IfConditionContext ctx) {
@@ -49,7 +55,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         if (ctx.IDENTIFIER().size() > 0) {
             String firstIdentifier = ctx.IDENTIFIER(0).getText();
             if (!firstIdentifier.isEmpty()) {
-                resolveSymbol(firstIdentifier);
+                resolveSymbol(firstIdentifier, ctx.getStart().getLine());
             }
 
             for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
@@ -69,7 +75,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         if (ctx.IDENTIFIER().size() > 0) {
             String firstIdentifier = ctx.IDENTIFIER(0).getText();
             if (!firstIdentifier.isEmpty()) {
-                resolveSymbol(firstIdentifier);
+                resolveSymbol(firstIdentifier, ctx.getStart().getLine());
             }
 
             for (int i = 0; i < ctx.IDENTIFIER().size(); i++) {
@@ -236,7 +242,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         }
 
         if (!iterable.isEmpty()) {
-            resolveSymbol(iterable);
+            resolveSymbol(iterable, line);
         }
         
         JinjaForNode forNode = new JinjaForNode(variable, iterable, line);

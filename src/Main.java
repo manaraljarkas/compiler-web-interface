@@ -3,6 +3,8 @@ import org.antlr.v4.runtime.tree.*;
 
 import visitor.HTMLJinjaCSSVisitor;
 import visitor.PythonASTVisitor;
+import errors.ScopeError;
+import errors.UndefinedSymbolError;
 import ast.ASTNode;
 import gen.Lexer_HTML_Jinja_CSS;
 import gen.Parser_HTML_Jinja_CSS;
@@ -15,6 +17,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        try {
                 // قراءة ملف HTML
                 // CharStream input = CharStreams.fromFileName("frontend/templates/product_details.html", java.nio.charset.StandardCharsets.UTF_8);
                 CharStream input = CharStreams.fromFileName("src/app.py", java.nio.charset.StandardCharsets.UTF_8);
@@ -48,6 +51,10 @@ public class Main {
                 } else {
                     System.out.println("Failed to build AST.");
                 }
+
+        } catch (UndefinedSymbolError | ScopeError e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 }
