@@ -241,11 +241,47 @@ public interface Parser_PythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCurly_item(Parser_Python.Curly_itemContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Parser_Python#expression}.
+	 * Visit a parse tree produced by the {@code ArithmeticExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpression(Parser_Python.ExpressionContext ctx);
+	T visitArithmeticExpr(Parser_Python.ArithmeticExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ComparisonExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComparisonExpr(Parser_Python.ComparisonExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code DictExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDictExpr(Parser_Python.DictExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ListExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitListExpr(Parser_Python.ListExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ParenExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParenExpr(Parser_Python.ParenExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AtomExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAtomExpr(Parser_Python.AtomExprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parser_Python#other_expression}.
 	 * @param ctx the parse tree
@@ -276,12 +312,6 @@ public interface Parser_PythonVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIf_statement(Parser_Python.If_statementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Parser_Python#condition}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCondition(Parser_Python.ConditionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Parser_Python#comparison_operator}.
 	 * @param ctx the parse tree

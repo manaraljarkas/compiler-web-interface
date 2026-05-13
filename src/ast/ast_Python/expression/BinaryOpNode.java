@@ -1,19 +1,30 @@
 package ast.ast_Python.expression;
 
+import errors.TypeMismatch;
+
 public class BinaryOpNode extends ExpressionNode {
 
     private ExpressionNode left;
     private String operator;
     private ExpressionNode right;
 
-    public BinaryOpNode(ExpressionNode left,
-                        String operator,
-                        ExpressionNode right,
-                        int line) {
+    public BinaryOpNode(ExpressionNode left, String operator, ExpressionNode right, int line) {
         super("BinaryOp", line);
         this.left = left;
         this.operator = operator;
         this.right = right;
+        CheckType();
+    }
+
+    public void CheckType() {
+        String leftType = left.getType();
+        String rightType = right.getType();
+
+        if (leftType == null || rightType == null) return;
+
+        if (!leftType.equals(rightType)) {
+            throw new TypeMismatch(leftType, rightType, this.lineNumber);
+        }
     }
 
     @Override

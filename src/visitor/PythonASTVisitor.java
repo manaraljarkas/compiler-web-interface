@@ -338,8 +338,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         ExpressionNode condition = null;
         
-        if (ctx.condition() != null) {
-            ASTNode result = visit(ctx.condition());
+        if (ctx.expression() != null) {
+            ASTNode result = visit(ctx.expression());
             if (result instanceof ExpressionNode) {
                 condition = (ExpressionNode) result;
             }
@@ -364,33 +364,6 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         return ifNode;
     }
 
-    @Override
-    public ASTNode visitCondition(Parser_Python.ConditionContext ctx) {
-        int line = ctx.getStart().getLine();
-        ExpressionNode left = null;
-        ExpressionNode right = null;
-        String operator = "";
-        
-        if (ctx.expression(0) != null) {
-            ASTNode result = visit(ctx.expression(0));
-            if (result instanceof ExpressionNode) {
-                left = (ExpressionNode) result;
-            }
-        }
-        
-        if (ctx.expression(1) != null) {
-            ASTNode result = visit(ctx.expression(1));
-            if (result instanceof ExpressionNode) {
-                right = (ExpressionNode) result;
-            }
-        }
-        
-        if (ctx.comparison_operator() != null) {
-            operator = ctx.comparison_operator().getStart().getText();
-        }
-        
-        return new BinaryOpNode(left, operator, right, line);
-    }
 
     @Override
     public ASTNode visitFor_loop(Parser_Python.For_loopContext ctx) {
@@ -505,15 +478,6 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         return new CallNode(functionName, arguments, line);
     }
 
-    @Override
-    public ASTNode visitExpression(Parser_Python.ExpressionContext ctx) {
-        if (ctx.other_expression() != null) {
-            return visit(ctx.other_expression());
-        } else if (ctx.list() != null) {
-            return visit(ctx.list());
-        }
-        return null;
-    }
 
     @Override
     public ASTNode visitOther_expression(Parser_Python.Other_expressionContext ctx) {
@@ -663,5 +627,41 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             return result;
         }
         return null;
+    }
+
+    @Override
+    public ASTNode visitArithmeticExpr(Parser_Python.ArithmeticExprContext ctx){
+        int line = ctx.getStart().getLine();
+        ExpressionNode left = (ExpressionNode) visit(ctx.expression(0));
+        ExpressionNode right = (ExpressionNode) visit(ctx.expression(1));
+        String op = ctx.getChild(1).getText();
+    return new BinaryOpNode(left, op, right, line);
+    }
+    @Override
+    public ASTNode visitComparisonExpr(Parser_Python.ComparisonExprContext ctx) {
+        int line = ctx.getStart().getLine();
+        ExpressionNode left = (ExpressionNode) visit(ctx.expression(0));
+        ExpressionNode right = (ExpressionNode) visit(ctx.expression(1));
+        String op = ctx.comparison_operator().getText();
+
+        return new BinaryOpNode(left, op, right, line);
+    }
+    @Override
+    public ASTNode visitAtomExpr(Parser_Python.AtomExprContext ctx) {
+        return visit(ctx.other_expression());
+    }
+    @Override
+    public ASTNode visitListExpr(Parser_Python.ListExprContext ctx) {
+        return visit(ctx.list());
+    }
+
+    @Override
+    public ASTNode visitDictExpr(Parser_Python.DictExprContext ctx) {
+        return visit(ctx.curly_argument());
+    }
+
+    @Override
+    public ASTNode visitParenExpr(Parser_Python.ParenExprContext ctx) {
+        return visit(ctx.expression());
     }
 }

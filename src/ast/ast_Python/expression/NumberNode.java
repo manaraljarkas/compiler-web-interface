@@ -7,6 +7,7 @@ public class NumberNode extends ExpressionNode {
     public NumberNode(int value, int line) {
         super("NumberNode", line);
         this.value = value;
+        this.setType("int");
     }
 
     @Override

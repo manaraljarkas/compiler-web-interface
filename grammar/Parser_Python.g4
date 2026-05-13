@@ -1,5 +1,3 @@
-
-
 parser grammar Parser_Python;
 
 @header {
@@ -28,8 +26,7 @@ import_json: IMPORT CHARACTERS NEWLINE?;
 function_defination:
     DEF CHARACTERS function_parameter Colon NEWLINE INDENT function_body DEDENT ;
 
-function_body:
-    (NEWLINE | statement_in_function)* ;
+function_body: (NEWLINE | statement_in_function)* ;
 
 
 statement_in_function
@@ -73,17 +70,25 @@ function_array: function_call LEFT_ARRAY STRING RIGHT_ARRAY;
 curly_argument: LEFT_CURLY curly_items? RIGHT_CURLY;
 curly_items: curly_item (COMMA (NEWLINE* curly_item))* ;
 curly_item: (STRING | CHARACTERS) Colon expression;
-expression: curly_argument | list | other_expression ;
+expression
+    : expression (MUL | DIV) expression           #ArithmeticExpr
+    | expression (PLUS | MINUS) expression         #ArithmeticExpr
+    | expression comparison_operator expression    #ComparisonExpr
+    | OPEN_B expression CLOSE_B                   #ParenExpr
+    | other_expression                             #AtomExpr
+    | list                                         #ListExpr
+    | curly_argument                               #DictExpr
+    ;
 
-other_expression:
-    function_array
+other_expression
+    : function_array
     | index_access
     | function_call
     | CHARACTERS
     | function_name
     | NUMBERS
-    | STRING;
-
+    | STRING
+    ;
 
 
 // with open("data/products.json", "w") as f:
@@ -101,8 +106,7 @@ assignment: CHARACTERS EQUAL expression NEWLINE? | CHARACTERS PLUSEQUAL expressi
 
 //  if request.method == "POST":
 // if product is None:
-if_statement  : IF condition Colon NEWLINE INDENT (NEWLINE | statement_in_function)* DEDENT ;
-condition: expression comparison_operator expression ;
+if_statement : IF expression Colon NEWLINE INDENT (NEWLINE | statement_in_function)* DEDENT ;
 comparison_operator: NOT_EQUAL |IS | IS_NOT | EQUAL_EQUAL| RIGHT_ANGLE | LEFT_ANGLE  ;
 
 

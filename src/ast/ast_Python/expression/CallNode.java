@@ -7,9 +7,7 @@ public class CallNode extends ExpressionNode {
     private String functionName;
     private List<ExpressionNode> arguments;
 
-    public CallNode(String functionName,
-                    List<ExpressionNode> arguments,
-                    int line) {
+    public CallNode(String functionName, List<ExpressionNode> arguments, int line) {
         super("Call", line);
         this.functionName = functionName;
         this.arguments = arguments;

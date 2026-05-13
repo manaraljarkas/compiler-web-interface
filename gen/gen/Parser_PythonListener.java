@@ -394,15 +394,77 @@ public interface Parser_PythonListener extends ParseTreeListener {
 	 */
 	void exitCurly_item(Parser_Python.Curly_itemContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Parser_Python#expression}.
+	 * Enter a parse tree produced by the {@code ArithmeticExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(Parser_Python.ExpressionContext ctx);
+	void enterArithmeticExpr(Parser_Python.ArithmeticExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Parser_Python#expression}.
+	 * Exit a parse tree produced by the {@code ArithmeticExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(Parser_Python.ExpressionContext ctx);
+	void exitArithmeticExpr(Parser_Python.ArithmeticExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ComparisonExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterComparisonExpr(Parser_Python.ComparisonExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ComparisonExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitComparisonExpr(Parser_Python.ComparisonExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code DictExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDictExpr(Parser_Python.DictExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code DictExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDictExpr(Parser_Python.DictExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ListExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterListExpr(Parser_Python.ListExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ListExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitListExpr(Parser_Python.ListExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ParenExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterParenExpr(Parser_Python.ParenExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ParenExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitParenExpr(Parser_Python.ParenExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AtomExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtomExpr(Parser_Python.AtomExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AtomExpr}
+	 * labeled alternative in {@link Parser_Python#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtomExpr(Parser_Python.AtomExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Parser_Python#other_expression}.
 	 * @param ctx the parse tree
@@ -453,16 +515,6 @@ public interface Parser_PythonListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIf_statement(Parser_Python.If_statementContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Parser_Python#condition}.
-	 * @param ctx the parse tree
-	 */
-	void enterCondition(Parser_Python.ConditionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Parser_Python#condition}.
-	 * @param ctx the parse tree
-	 */
-	void exitCondition(Parser_Python.ConditionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Parser_Python#comparison_operator}.
 	 * @param ctx the parse tree

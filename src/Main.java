@@ -1,18 +1,14 @@
+import errors.TypeMismatch;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-import visitor.HTMLJinjaCSSVisitor;
 import visitor.PythonASTVisitor;
 import errors.ScopeError;
 import errors.UndefinedSymbolError;
 import ast.ASTNode;
-import gen.Lexer_HTML_Jinja_CSS;
-import gen.Parser_HTML_Jinja_CSS;
 import gen.Parser_Python;
 import gen.Lexer_Python;
-import gen.Parser_Python;
-import gen.Lexer_HTML_Jinja_CSS;
-import gen.Parser_HTML_Jinja_CSS;
+
 import java.io.IOException;
 
 public class Main {
@@ -40,6 +36,7 @@ public class Main {
                 // HTMLJinjaCSSVisitor visitor = new HTMLJinjaCSSVisitor();
                 PythonASTVisitor visitor = new PythonASTVisitor();
                 ASTNode ast = visitor.visit(tree);
+                System.out.println("Semantic Analysis Passed Successfully!");
                 System.out.println("\n\n\n");
                 System.out.println("=== SYMBOL TABLE ===");
                 visitor.getSymbolTable().print();                                                             
@@ -55,6 +52,9 @@ public class Main {
         } catch (UndefinedSymbolError | ScopeError e) {
             System.out.println(e.getMessage());
         }
-
+        catch (TypeMismatch e) {
+            System.err.println("\n>>>> Type Mismatch FOUND <<<<");
+            System.err.println(e.getMessage());
+        }
     }
 }

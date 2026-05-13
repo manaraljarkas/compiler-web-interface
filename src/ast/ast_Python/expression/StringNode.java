@@ -7,6 +7,7 @@ public class StringNode extends ExpressionNode {
     public StringNode(String value, int line) {
         super("StringNode", line);
         this.value = value;
+        this.setType("string");
     }
 
     @Override

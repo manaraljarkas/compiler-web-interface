@@ -17,10 +17,8 @@ def add():
         name = request.form.get("name")
         price = request.form.get("price")
 
-        # --- السطر اللي كان ناقص ---
         products = load_products()
 
-        # الكومبايلر هلا رح يشوف products معرفة نظامي ويمرقها
         for p in products:
             new_id = p["id"]
 
