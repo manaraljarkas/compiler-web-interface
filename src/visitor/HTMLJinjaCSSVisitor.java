@@ -1,6 +1,10 @@
 package visitor;
 
 import SymbolTable.SymbolTable;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import SymbolTable.Row;
 import errors.ScopeError;
 import errors.UndefinedSymbolError;
@@ -16,6 +20,25 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
 
     private final SymbolTable symbolTable = new SymbolTable();
     private SymbolTable currentScope = symbolTable;
+
+    // flask
+    private final List<String> jinjaVars = new ArrayList<>();
+    private final List<String> internalVars = new ArrayList<>();
+    private String currentTemplateName = "";
+
+    public List<String> getJinjaVars() {
+        return jinjaVars;
+    }
+
+    public void setTemplateName(String name) {
+        this.currentTemplateName = name;
+    }
+
+    public String getTemplateName() {
+        return currentTemplateName;
+    }
+
+    //////
 
     public SymbolTable getSymbolTable() {
         return symbolTable;
@@ -93,7 +116,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitDocument(Parser_HTML_Jinja_CSS.DocumentContext ctx) {
         currentScope = symbolTable;
         DocumentNode document = new DocumentNode(ctx.getStart().getLine());
-        
+
         if (ctx.node() != null) {
             for (Parser_HTML_Jinja_CSS.NodeContext nodeCtx : ctx.node()) {
                 ASTNode result = visit(nodeCtx);
@@ -102,7 +125,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 }
             }
         }
-        
+
         return document;
     }
 
@@ -140,13 +163,13 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitTextNode(Parser_HTML_Jinja_CSS.TextNodeContext ctx) {
         int line = ctx.getStart().getLine();
         String text = ctx.TEXT().getText();
-        
+
         // Filter out whitespace-only text nodes (newlines, spaces, tabs)
         // These are typically formatting whitespace around closing tags
         if (text.trim().isEmpty()) {
             return null;
         }
-        
+
         return new TextNode(text, line);
     }
 
@@ -160,14 +183,14 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitHtmlElement(Parser_HTML_Jinja_CSS.HtmlElementContext ctx) {
         int line = ctx.getStart().getLine();
         String tagName = "";
-        
+
         // Extract tag name from first IDENTIFIER after LT (opening tag)
         if (ctx.IDENTIFIER().size() > 0) {
             tagName = ctx.IDENTIFIER(0).getText();
         }
-        
+
         HtmlElementNode elementNode = new HtmlElementNode(tagName, line);
-        
+
         // Visit child nodes (content between opening and closing tags)
         // The grammar structure: LT IDENTIFIER ... GT node* LT SLASH IDENTIFIER GT
         // We need to visit the nodes in the middle
@@ -179,15 +202,16 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 }
             }
         }
-        
+
         // Extract closing tag line number
         // The grammar structure: LT IDENTIFIER ... GT node* LT SLASH IDENTIFIER GT
-        // The last IDENTIFIER is the closing tag name, and we can get its line from the stop token
+        // The last IDENTIFIER is the closing tag name, and we can get its line from the
+        // stop token
         if (ctx.getStop() != null) {
             // Get the line from the GT token after the closing tag
             elementNode.setClosingTagLine(ctx.getStop().getLine());
         }
-        
+
         return elementNode;
     }
 
@@ -195,11 +219,11 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitHtmlVoidElement(Parser_HTML_Jinja_CSS.HtmlVoidElementContext ctx) {
         int line = ctx.getStart().getLine();
         String tagName = "";
-        
+
         if (ctx.IDENTIFIER().size() > 0) {
             tagName = ctx.IDENTIFIER(0).getText();
         }
-        
+
         return new VoidElementNode(tagName, line);
     }
 
@@ -207,7 +231,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitStyleElement(Parser_HTML_Jinja_CSS.StyleElementContext ctx) {
         int line = ctx.getStart().getLine();
         StyleNode styleNode = new StyleNode(line);
-        
+
         if (ctx.css_rule() != null) {
             for (Parser_HTML_Jinja_CSS.Css_ruleContext ruleCtx : ctx.css_rule()) {
                 ASTNode result = visit(ruleCtx);
@@ -216,7 +240,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 }
             }
         }
-        
+
         return styleNode;
     }
 
@@ -235,16 +259,25 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         int line = ctx.getStart().getLine();
         String variable = "";
         String iterable = "";
-        
+
         if (ctx.IDENTIFIER().size() >= 2) {
             variable = ctx.IDENTIFIER(0).getText();
             iterable = ctx.IDENTIFIER(1).getText();
         }
 
-        if (!iterable.isEmpty()) {
-            resolveSymbol(iterable, line);
+        if (!variable.isEmpty()) {
+            internalVars.add(variable);
         }
-        
+        // if (!iterable.isEmpty()) {
+        // resolveSymbol(iterable, line);
+        // }
+        // flask
+        if (!iterable.isEmpty()) {
+
+            jinjaVars.add(iterable);
+        }
+
+        /////
         JinjaForNode forNode = new JinjaForNode(variable, iterable, line);
 
         enterScope("jinja-for@" + line);
@@ -272,11 +305,19 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitJinjaIfStatement(Parser_HTML_Jinja_CSS.JinjaIfStatementContext ctx) {
         int line = ctx.getStart().getLine();
         String condition = "";
-        
+
         if (ctx.ifCondition() != null) {
-            condition = resolveIdentifierChain(ctx.ifCondition());
+            // condition = resolveIdentifierChain(ctx.ifCondition());
+
+            if (ctx.ifCondition() != null && ctx.ifCondition().IDENTIFIER().size() > 0) {
+                String firstIdentifier = ctx.ifCondition().IDENTIFIER(0).getText();
+                if (!firstIdentifier.isEmpty()) {
+                    jinjaVars.add(firstIdentifier);
+                }
+                condition = firstIdentifier;
+            }
         }
-        
+
         JinjaIfNode ifNode = new JinjaIfNode(condition, line);
 
         enterScope("jinja-if@" + line);
@@ -293,15 +334,21 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         } finally {
             exitScope();
         }
-        
+
         return ifNode;
     }
 
     @Override
     public ASTNode visitJinjaExpression(Parser_HTML_Jinja_CSS.JinjaExpressionContext ctx) {
-        int line = ctx.getStart().getLine();
-        String expression = resolveIdentifierChain(ctx);
 
+        int line = ctx.getStart().getLine();
+        String expression = "";
+        if (ctx.IDENTIFIER().size() > 0) {
+            expression = ctx.IDENTIFIER(0).getText();
+            if (!expression.isEmpty() && !internalVars.contains(expression)) {
+                jinjaVars.add(expression);
+            }
+        }
         return new JinjaExpressionNode(expression, line);
     }
 
@@ -309,10 +356,10 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     public ASTNode visitCss_rule(Parser_HTML_Jinja_CSS.Css_ruleContext ctx) {
         int line = ctx.getStart().getLine();
         String selector = "";
-        
+
         if (ctx.css_selector() != null) {
             Parser_HTML_Jinja_CSS.Css_selectorContext selectorCtx = ctx.css_selector();
-            
+
             if (selectorCtx.CSS_DOT() != null && selectorCtx.CHARACTERS().size() > 0) {
                 // Class selector: .classname
                 selector = "." + selectorCtx.CHARACTERS(0).getText();
@@ -328,9 +375,9 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 selector = selectorBuilder.toString();
             }
         }
-        
+
         CssRuleNode ruleNode = new CssRuleNode(selector, line);
-        
+
         if (ctx.css_property() != null) {
             for (Parser_HTML_Jinja_CSS.Css_propertyContext propCtx : ctx.css_property()) {
                 ASTNode result = visit(propCtx);
@@ -339,7 +386,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 }
             }
         }
-        
+
         return ruleNode;
     }
 
@@ -348,15 +395,15 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         int line = ctx.getStart().getLine();
         String name = "";
         String value = "";
-        
+
         if (ctx.CHARACTERS() != null) {
             name = ctx.CHARACTERS().getText();
         }
-        
+
         if (ctx.css_value() != null) {
             Parser_HTML_Jinja_CSS.Css_valueContext valueCtx = ctx.css_value();
             StringBuilder valueBuilder = new StringBuilder();
-            
+
             // Collect all tokens in css_value
             for (int i = 0; i < valueCtx.getChildCount(); i++) {
                 if (i > 0) {
@@ -364,10 +411,10 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
                 }
                 valueBuilder.append(valueCtx.getChild(i).getText());
             }
-            
+
             value = valueBuilder.toString().trim();
         }
-        
+
         return new CssPropertyNode(name, value, line);
     }
 }

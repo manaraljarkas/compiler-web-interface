@@ -11,13 +11,23 @@ import ast.ast_Python.ProgramNode;
 import ast.ast_Python.statement.*;
 import ast.ast_Python.expression.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
 
     private final SymbolTable symbolTable = new SymbolTable();
     private SymbolTable currentScope = symbolTable;
 
+    // Falsk error
+    private final Map<String, List<String>> renderTemplateVars = new LinkedHashMap<>();
+
+    public Map<String, List<String>> getRenderTemplateVars() {
+        return renderTemplateVars;
+    }
+
+    ////
     public SymbolTable getSymbolTable() {
         return symbolTable;
     }
@@ -100,7 +110,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitProgram(Parser_Python.ProgramContext ctx) {
         currentScope = symbolTable;
         ProgramNode program = new ProgramNode(ctx.getStart().getLine());
-        
+
         if (ctx.statement() != null) {
             for (Parser_Python.StatementContext stmtCtx : ctx.statement()) {
                 ASTNode result = visit(stmtCtx);
@@ -109,7 +119,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 }
             }
         }
-        
+
         return program;
     }
 
@@ -153,7 +163,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         String moduleName = ctx.CHARACTERS(0).getText();
         List<String> importedNames = new ArrayList<>();
-        
+
         for (int i = 1; i < ctx.CHARACTERS().size(); i++) {
             importedNames.add(ctx.CHARACTERS(i).getText());
         }
@@ -162,7 +172,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         for (String importedName : importedNames) {
             defineSymbol(importedName, "Import", moduleName);
         }
-        
+
         return new ImportNode(moduleName, importedNames, line);
     }
 
@@ -181,15 +191,15 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitRoute(Parser_Python.RouteContext ctx) {
         int line = ctx.getStart().getLine();
         Parser_Python.Route_parameterContext paramCtx = ctx.route_parameter();
-        
+
         if (paramCtx != null && paramCtx.route_parameter_body() != null) {
             Parser_Python.Route_parameter_bodyContext bodyCtx = paramCtx.route_parameter_body();
             String path = bodyCtx.STRING().getText();
             // Remove quotes
             path = path.substring(1, path.length() - 1);
-            
+
             RouteNode routeNode = new RouteNode(path, line);
-            
+
             // Check for methods option
             if (bodyCtx.route_parameter_options() != null) {
                 Parser_Python.Route_parameter_optionsContext optionsCtx = bodyCtx.route_parameter_options();
@@ -204,10 +214,10 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                     }
                 }
             }
-            
+
             return routeNode;
         }
-        
+
         return null;
     }
 
@@ -215,7 +225,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitFunction_defination(Parser_Python.Function_definationContext ctx) {
         int line = ctx.getStart().getLine();
         String functionName = ctx.CHARACTERS() != null ? ctx.CHARACTERS().getText() : "";
-        
+
         FunctionNode functionNode = new FunctionNode(functionName, line);
 
         if (!functionName.isEmpty()) {
@@ -227,7 +237,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         try {
             // Visit function parameters in the function scope
             if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
-                Parser_Python.Set_function_parameterContext paramsCtx = ctx.function_parameter().set_function_parameter();
+                Parser_Python.Set_function_parameterContext paramsCtx = ctx.function_parameter()
+                        .set_function_parameter();
                 for (org.antlr.v4.runtime.tree.TerminalNode param : paramsCtx.CHARACTERS()) {
                     functionNode.addParameter(param.getText());
 
@@ -251,7 +262,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         } finally {
             exitScope();
         }
-        
+
         return functionNode;
     }
 
@@ -300,30 +311,30 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitReturn_statement(Parser_Python.Return_statementContext ctx) {
         int line = ctx.getStart().getLine();
         ExpressionNode value = null;
-        
+
         if (ctx.expression() != null) {
             ASTNode result = visit(ctx.expression());
             if (result instanceof ExpressionNode) {
                 value = (ExpressionNode) result;
             }
         }
-        
+
         return new ReturnNode(value, line);
     }
 
     @Override
     public ASTNode visitAssignment(Parser_Python.AssignmentContext ctx) {
         int line = ctx.getStart().getLine();
-    
+
         if (ctx.CHARACTERS() == null) {
             return null;
         }
-    
+
         String variable = ctx.CHARACTERS().getText();
-            if (ctx.expression() == null) {
+        if (ctx.expression() == null) {
             return null;
         }
-    
+
         ASTNode result = visit(ctx.expression());
         if (!(result instanceof ExpressionNode)) {
             return null;
@@ -337,14 +348,14 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitIf_statement(Parser_Python.If_statementContext ctx) {
         int line = ctx.getStart().getLine();
         ExpressionNode condition = null;
-        
+
         if (ctx.expression() != null) {
             ASTNode result = visit(ctx.expression());
             if (result instanceof ExpressionNode) {
                 condition = (ExpressionNode) result;
             }
         }
-        
+
         IfNode ifNode = new IfNode(condition, line);
 
         enterScope("if@" + line);
@@ -360,10 +371,9 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         } finally {
             exitScope();
         }
-        
+
         return ifNode;
     }
-
 
     @Override
     public ASTNode visitFor_loop(Parser_Python.For_loopContext ctx) {
@@ -372,7 +382,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String iterable = ctx.CHARACTERS(1).getText();
 
         resolveSymbol(iterable, line);
-        
+
         ForNode forNode = new ForNode(variable, iterable, line);
 
         enterScope("for@" + line);
@@ -390,7 +400,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         } finally {
             exitScope();
         }
-        
+
         return forNode;
     }
 
@@ -399,7 +409,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         int line = ctx.getStart().getLine();
         List<String> files = new ArrayList<>();
         String alias = "";
-        
+
         if (ctx.with_parameter() != null) {
             for (org.antlr.v4.runtime.tree.TerminalNode strNode : ctx.with_parameter().STRING()) {
                 String file = strNode.getText();
@@ -407,11 +417,11 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 files.add(file);
             }
         }
-        
+
         if (ctx.CHARACTERS() != null && ctx.CHARACTERS().getText() != null) {
             alias = ctx.CHARACTERS().getText();
         }
-        
+
         WithNode withNode = new WithNode(files, alias, line);
 
         enterScope("with@" + line);
@@ -432,7 +442,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         } finally {
             exitScope();
         }
-        
+
         return withNode;
     }
 
@@ -462,8 +472,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                     if (result instanceof ExpressionNode) {
                         arguments.add((ExpressionNode) result);
                     }
-                }
-                else if (argCtx.key_value() != null) {
+                } else if (argCtx.key_value() != null) {
                     Parser_Python.Key_valueContext kvCtx = argCtx.key_value();
                     if (kvCtx.expression() != null) {
                         ASTNode result = visit(kvCtx.expression());
@@ -475,9 +484,32 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             }
         }
 
+        // flask
+        if (functionName.equals("render_template") && ctx.argument_list() != null) {
+            String templateName = null;
+            List<String> vars = new ArrayList<>();
+
+            List<Parser_Python.ArgumentContext> args = ctx.argument_list().argument();
+            for (int i = 0; i < args.size(); i++) {
+                Parser_Python.ArgumentContext argCtx = args.get(i);
+                if (i == 0 && argCtx.expression() != null) {
+
+                    String raw = argCtx.expression().getText();
+                    templateName = raw.replaceAll("^\"|\"$|^'|'$", "");
+                } else if (argCtx.key_value() != null) {
+
+                    vars.add(argCtx.key_value().getChild(0).getText());
+                }
+            }
+
+            if (templateName != null) {
+                renderTemplateVars.put(templateName, vars);
+            }
+        }
+        //////
+
         return new CallNode(functionName, arguments, line);
     }
-
 
     @Override
     public ASTNode visitOther_expression(Parser_Python.Other_expressionContext ctx) {
@@ -526,7 +558,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitFunction_array(Parser_Python.Function_arrayContext ctx) {
         // function_array: function_call LEFT_ARRAY STRING RIGHT_ARRAY
         // This handles expressions like json.load(f)["products"]
-        // Return the function call result - index access will be handled at a higher level if needed
+        // Return the function call result - index access will be handled at a higher
+        // level if needed
         return visit(ctx.function_call());
     }
 
@@ -539,7 +572,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         if (!variableName.isEmpty() && !isPythonLiteralName(variableName)) {
             resolveSymbol(variableName, line);
         }
-        
+
         if (ctx.STRING() != null) {
             String indexStr = ctx.STRING().getText();
             if (indexStr != null && indexStr.length() >= 2) {
@@ -547,7 +580,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 index = indexStr.substring(1, indexStr.length() - 1);
             }
         }
-        
+
         return new iIndexAccessNode(variableName, index, line);
     }
 
@@ -561,7 +594,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitNonEmptyList(Parser_Python.NonEmptyListContext ctx) {
         int line = ctx.getStart().getLine();
         List<ExpressionNode> elements = new ArrayList<>();
-        
+
         if (ctx.list_items() != null) {
             for (Parser_Python.ExpressionContext exprCtx : ctx.list_items().expression()) {
                 ASTNode result = visit(exprCtx);
@@ -570,7 +603,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 }
             }
         }
-        
+
         return new ListNode(elements, line);
     }
 
@@ -578,33 +611,33 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     public ASTNode visitCurly_argument(Parser_Python.Curly_argumentContext ctx) {
         int line = ctx.getStart().getLine();
         DictNode dictNode = new DictNode(line);
-        
+
         if (ctx.curly_items() != null) {
             for (Parser_Python.Curly_itemContext itemCtx : ctx.curly_items().curly_item()) {
                 // Handle dictionary item: key: value
                 String key = "";
                 ExpressionNode value = null;
-                
+
                 if (itemCtx.STRING() != null) {
                     String keyStr = itemCtx.STRING().getText();
                     key = keyStr.substring(1, keyStr.length() - 1); // Remove quotes
                 } else if (itemCtx.CHARACTERS() != null) {
                     key = itemCtx.CHARACTERS().getText();
                 }
-                
+
                 if (itemCtx.expression() != null) {
                     ASTNode exprResult = visit(itemCtx.expression());
                     if (exprResult instanceof ExpressionNode) {
                         value = (ExpressionNode) exprResult;
                     }
                 }
-                
+
                 if (!key.isEmpty()) {
                     dictNode.addItem(key, value);
                 }
             }
         }
-        
+
         return dictNode;
     }
 
@@ -630,13 +663,14 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     }
 
     @Override
-    public ASTNode visitArithmeticExpr(Parser_Python.ArithmeticExprContext ctx){
+    public ASTNode visitArithmeticExpr(Parser_Python.ArithmeticExprContext ctx) {
         int line = ctx.getStart().getLine();
         ExpressionNode left = (ExpressionNode) visit(ctx.expression(0));
         ExpressionNode right = (ExpressionNode) visit(ctx.expression(1));
         String op = ctx.getChild(1).getText();
-    return new BinaryOpNode(left, op, right, line);
+        return new BinaryOpNode(left, op, right, line);
     }
+
     @Override
     public ASTNode visitComparisonExpr(Parser_Python.ComparisonExprContext ctx) {
         int line = ctx.getStart().getLine();
@@ -646,10 +680,12 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
 
         return new BinaryOpNode(left, op, right, line);
     }
+
     @Override
     public ASTNode visitAtomExpr(Parser_Python.AtomExprContext ctx) {
         return visit(ctx.other_expression());
     }
+
     @Override
     public ASTNode visitListExpr(Parser_Python.ListExprContext ctx) {
         return visit(ctx.list());
