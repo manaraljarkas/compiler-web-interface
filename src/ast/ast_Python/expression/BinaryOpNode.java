@@ -20,11 +20,13 @@ public class BinaryOpNode extends ExpressionNode {
         String leftType = left.getType();
         String rightType = right.getType();
 
-        if (leftType == null || rightType == null) return;
+        if (leftType == null || rightType == null)
+            return;
 
         if (!leftType.equals(rightType)) {
             throw new TypeMismatch(leftType, rightType, this.lineNumber);
         }
+
     }
 
     @Override

@@ -3,6 +3,7 @@ package visitor;
 import SymbolTable.SymbolTable;
 import SymbolTable.Row;
 import errors.ScopeError;
+import errors.TypeError;
 import errors.UndefinedSymbolError;
 import gen.Parser_Python;
 import gen.Parser_PythonBaseVisitor;
@@ -19,6 +20,8 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
 
     private final SymbolTable symbolTable = new SymbolTable();
     private SymbolTable currentScope = symbolTable;
+    // Type
+    private String currentFunctionName = "";
 
     // Falsk error
     private final Map<String, List<String>> renderTemplateVars = new LinkedHashMap<>();
@@ -106,11 +109,49 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         return nameBuilder.toString();
     }
 
+    // public ASTNode visitProgram(Parser_Python.ProgramContext ctx) {
+    // currentScope = symbolTable;
+    // ProgramNode program = new ProgramNode(ctx.getStart().getLine());
+
+    // if (ctx.statement() != null) {
+    // for (Parser_Python.StatementContext stmtCtx : ctx.statement()) {
+    // ASTNode result = visit(stmtCtx);
+    // if (result instanceof StatementNode) {
+    // program.addStatement((StatementNode) result);
+    // }
+    // }
+    // }
+
+    // return program;
+    // }
+
+    // TYPE ERROR
     @Override
     public ASTNode visitProgram(Parser_Python.ProgramContext ctx) {
         currentScope = symbolTable;
         ProgramNode program = new ProgramNode(ctx.getStart().getLine());
 
+        // ── Pass 1: سجّل كل الـ functions أول ──
+        if (ctx.statement() != null) {
+            for (Parser_Python.StatementContext stmtCtx : ctx.statement()) {
+                if (stmtCtx instanceof Parser_Python.FunctionDefStmtContext) {
+                    Parser_Python.Function_definationContext fnCtx = ((Parser_Python.FunctionDefStmtContext) stmtCtx)
+                            .function_defination();
+                    String fnName = fnCtx.CHARACTERS() != null ? fnCtx.CHARACTERS().getText() : "";
+                    if (!fnName.isEmpty() && currentScope.getRowInCurrentScope(fnName) == null) {
+                        int paramCount = 0;
+                        if (fnCtx.function_parameter() != null &&
+                                fnCtx.function_parameter().set_function_parameter() != null) {
+                            paramCount = fnCtx.function_parameter()
+                                    .set_function_parameter().CHARACTERS().size();
+                        }
+                        defineSymbol(fnName, "Function/" + paramCount, null);
+                    }
+                }
+            }
+        }
+
+        // ── Pass 2: تحليل كامل ──
         if (ctx.statement() != null) {
             for (Parser_Python.StatementContext stmtCtx : ctx.statement()) {
                 ASTNode result = visit(stmtCtx);
@@ -228,12 +269,24 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
 
         FunctionNode functionNode = new FunctionNode(functionName, line);
 
+        // if (!functionName.isEmpty()) {
+        // defineSymbol(functionName, "Function", null);
+        // }
+
+        // Type error
         if (!functionName.isEmpty()) {
-            defineSymbol(functionName, "Function", null);
+            int paramCount = 0;
+            if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
+                paramCount = ctx.function_parameter().set_function_parameter().CHARACTERS().size();
+            }
+            Row existing = currentScope.getRowInCurrentScope(functionName);
+            if (existing == null) {
+                defineSymbol(functionName, "Function/" + paramCount, null);
+            }
         }
-
         enterScope(functionName.isEmpty() ? "function@" + line : functionName);
-
+        String previousFunctionName = currentFunctionName;
+        currentFunctionName = functionName;
         try {
             // Visit function parameters in the function scope
             if (ctx.function_parameter() != null && ctx.function_parameter().set_function_parameter() != null) {
@@ -260,6 +313,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 }
             }
         } finally {
+            currentFunctionName = previousFunctionName;
             exitScope();
         }
 
@@ -319,6 +373,24 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             }
         }
 
+        // Wrong Return Type
+        if (!currentFunctionName.isEmpty() && value != null && value.getType() != null) {
+            Row funcRow = symbolTable.getRowInCurrentScope(currentFunctionName);
+            if (funcRow != null) {
+                String existingReturn = funcRow.getValue();
+                if (existingReturn != null && existingReturn.startsWith("returns:")) {
+                    String expectedReturn = existingReturn.substring("returns:".length());
+                    if (!expectedReturn.equals(value.getType())
+                            && !"unknown".equals(expectedReturn)
+                            && !"unknown".equals(value.getType())) {
+                        throw new TypeError(currentFunctionName, expectedReturn, value.getType(), line);
+                    }
+                } else {
+                    funcRow.setValue("returns:" + value.getType());
+                }
+            }
+        }
+
         return new ReturnNode(value, line);
     }
 
@@ -340,7 +412,35 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             return null;
         }
         String value = ctx.expression().getText();
-        assignSymbol(variable, "VariableAssign", value);
+        // assignSymbol(variable, "VariableAssign", value);
+        String inferredType = "VariableAssign";
+        if (result instanceof NumberNode)
+            inferredType = "int";
+        else if (result instanceof StringNode)
+            inferredType = "string";
+        else if (result instanceof ListNode)
+            inferredType = "list";
+        else if (result instanceof DictNode)
+            inferredType = "dict";
+        // TypeError: Function Used as Variable:
+        if (currentScope == symbolTable) {
+            Row existing = symbolTable.getRowInCurrentScope(variable);
+            if (existing != null && existing.getType() != null
+                    && existing.getType().startsWith("Function/")) {
+                throw new TypeError(variable, true, line);
+            }
+        }
+        // TypeError: Invalid Assignment
+        Row existingVar = currentScope.getRowInCurrentScope(variable);
+        if (existingVar != null && existingVar.getType() != null
+                && inferredType != null
+                && !inferredType.equals("VariableAssign")
+                && !existingVar.getType().equals("VariableAssign")
+                && !existingVar.getType().equals(inferredType)) {
+            throw new TypeError(variable, existingVar.getType(), inferredType, true, line);
+        }
+
+        assignSymbol(variable, inferredType, value);
         return new AssignmentNode(line, variable, (ExpressionNode) result);
     }
 
@@ -382,7 +482,14 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         String iterable = ctx.CHARACTERS(1).getText();
 
         resolveSymbol(iterable, line);
-
+        // type error
+        Row iterableRow = currentScope.getRow(iterable);
+        if (iterableRow != null) {
+            String iterType = iterableRow.getType();
+            if ("int".equals(iterType) || "bool".equals(iterType)) {
+                throw new TypeError(iterable, iterType, false, line);
+            }
+        }
         ForNode forNode = new ForNode(variable, iterable, line);
 
         enterScope("for@" + line);
@@ -464,6 +571,19 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             functionName = nameBuilder.toString();
         }
 
+        // ── TypeError: not callable ──
+        // If the name resolves to a symbol whose type is a known non-callable,
+        // throw a TypeError before attempting the call.
+        if (!functionName.isEmpty() && !functionName.contains(".")) {
+            Row funcRow = currentScope.getRow(functionName);
+            if (funcRow != null) {
+                String fType = funcRow.getType();
+                if ("int".equals(fType) || "string".equals(fType) || "bool".equals(fType)) {
+                    throw new TypeError(functionName, fType, line);
+                }
+            }
+        }
+
         if (ctx.argument_list() != null) {
             for (Parser_Python.ArgumentContext argCtx : ctx.argument_list().argument()) {
 
@@ -483,7 +603,22 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 }
             }
         }
-
+        // ── TypeError: wrong argument count ──
+        // Only check user-defined functions (type stored as "Function/<n>")
+        if (!functionName.isEmpty() && !functionName.contains(".")) {
+            Row funcRow = currentScope.getRow(functionName);
+            if (funcRow != null && funcRow.getType() != null
+                    && funcRow.getType().startsWith("Function/")) {
+                try {
+                    int expectedArgs = Integer.parseInt(
+                            funcRow.getType().substring("Function/".length()));
+                    if (arguments.size() != expectedArgs) {
+                        throw new TypeError(functionName, expectedArgs, arguments.size(), line);
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
         // flask
         if (functionName.equals("render_template") && ctx.argument_list() != null) {
             String templateName = null;
@@ -517,14 +652,30 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             return visit(ctx.function_call());
         } else if (ctx.index_access() != null) {
             return visit(ctx.index_access());
-        } else if (ctx.CHARACTERS() != null) {
+        }
+        // type
+        else if (ctx.CHARACTERS() != null) {
             int line = ctx.getStart().getLine();
             String name = ctx.CHARACTERS().getText();
             if (!isPythonLiteralName(name)) {
                 resolveSymbol(name, line);
             }
-            return name != null ? new NameNode(name, line) : null;
-        } else if (ctx.function_name() != null) {
+            NameNode node = new NameNode(name, line);
+            Row r = currentScope.getRow(name);
+            if (r != null && r.getType() != null) {
+                node.setType(r.getType());
+            }
+            return node;
+        }
+        // } else if (ctx.CHARACTERS() != null) {
+        // int line = ctx.getStart().getLine();
+        // String name = ctx.CHARACTERS().getText();
+        // if (!isPythonLiteralName(name)) {
+        // resolveSymbol(name, line);
+        // }
+        // return name != null ? new NameNode(name, line) : null;
+        // }
+        else if (ctx.function_name() != null) {
             int line = ctx.getStart().getLine();
             Parser_Python.Function_nameContext nameCtx = ctx.function_name();
             String qualifiedName = buildQualifiedName(nameCtx);

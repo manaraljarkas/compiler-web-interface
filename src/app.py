@@ -47,5 +47,35 @@ def product_details(id):
 def test_scope():
     inside_var = 100
 
-  
+# def test_type_errors():
+#     greet("Ali")
 
+# def greet(name, age):
+    
+    
+#     return name
+
+#   def test_type_errors():
+#     x = 5
+#     for i in x:
+#         y = 1
+
+#  def test_type_errors():
+#     x = 5
+#     x()
+
+
+# def greet(name):
+#     return name
+
+# greet = 5
+
+# x = 5
+# x = "hello"  
+
+# def calculate():
+#     return 5
+
+# def calculate2():
+#     return "hello"
+#     return 10

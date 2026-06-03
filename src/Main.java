@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.tree.*;
 
 import visitor.PythonASTVisitor;
 import errors.ScopeError;
+import errors.TypeError;
 import errors.UndefinedSymbolError;
 import ast.ASTNode;
 import gen.Parser_Python;
@@ -63,6 +64,11 @@ public class Main {
             } catch (UndefinedSymbolError | ScopeError e) {
 
                 System.out.println("\n>>>> Scope / Undefined Error FOUND <<<<");
+                System.out.println(e.getMessage());
+
+            } catch (TypeError e) {
+
+                System.out.println("\n>>>> Type Error FOUND <<<<");
                 System.out.println(e.getMessage());
 
             }
@@ -137,6 +143,9 @@ public class Main {
         } catch (UndefinedSymbolError | ScopeError e) {
             System.out.println("\n>>>> Scope / Undefined Error FOUND <<<<");
             System.out.println(e.getMessage());
+        } catch (TypeError e) {
+            System.err.println("\n>>>> Type Error FOUND <<<<");
+            System.err.println(e.getMessage());
         } catch (TypeMismatch e) {
             System.err.println("\n>>>> Type Mismatch FOUND <<<<");
             System.err.println(e.getMessage());
