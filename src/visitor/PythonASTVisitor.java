@@ -93,6 +93,36 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         return "None".equals(name) || "True".equals(name) || "False".equals(name);
     }
 
+    // TypeError: Invalid Assignment — best-effort real-type resolution.
+    // Returns "unknown" whenever the real type can't be determined (rather than
+    // guessing), so callers can skip the comparison instead of producing a
+    // false positive/negative.
+    private String resolveRealType(ExpressionNode node) {
+        if (node instanceof NumberNode) {
+            return "int";
+        } else if (node instanceof StringNode) {
+            return "string";
+        } else if (node instanceof ListNode) {
+            return "list";
+        } else if (node instanceof DictNode) {
+            return "dict";
+        } else if (node instanceof NameNode) {
+            String registeredType = node.getType();
+            boolean isDescriptiveTag = "Parameter".equals(registeredType)
+                    || "ForLoopVariable".equals(registeredType)
+                    || "WithAlias".equals(registeredType)
+                    || "VariableAssign".equals(registeredType);
+            if (registeredType == null || isDescriptiveTag) {
+                return "unknown";
+            }
+            return registeredType;
+        } else if (node instanceof CallNode) {
+            String returnType = node.getType();
+            return returnType != null ? returnType : "unknown";
+        }
+        return "unknown";
+    }
+
     private String buildQualifiedName(Parser_Python.Function_nameContext nameCtx) {
         StringBuilder nameBuilder = new StringBuilder();
         for (int i = 0; i < nameCtx.CHARACTERS().size(); i++) {
@@ -374,19 +404,24 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         }
 
         // Wrong Return Type
-        if (!currentFunctionName.isEmpty() && value != null && value.getType() != null) {
-            Row funcRow = symbolTable.getRowInCurrentScope(currentFunctionName);
-            if (funcRow != null) {
-                String existingReturn = funcRow.getValue();
-                if (existingReturn != null && existingReturn.startsWith("returns:")) {
-                    String expectedReturn = existingReturn.substring("returns:".length());
-                    if (!expectedReturn.equals(value.getType())
-                            && !"unknown".equals(expectedReturn)
-                            && !"unknown".equals(value.getType())) {
-                        throw new TypeError(currentFunctionName, expectedReturn, value.getType(), line);
+        if (!currentFunctionName.isEmpty() && value != null) {
+            String actualReturnType = resolveRealType(value);
+            // If we can't actually determine what this return statement returns,
+            // don't commit to an expected type and don't compare against one yet —
+            // wait for a later return with a known type instead.
+            if (!"unknown".equals(actualReturnType)) {
+                Row funcRow = symbolTable.getRowInCurrentScope(currentFunctionName);
+                if (funcRow != null) {
+                    String existingReturn = funcRow.getValue();
+                    if (existingReturn != null && existingReturn.startsWith("returns:")) {
+                        String expectedReturn = existingReturn.substring("returns:".length());
+                        if (!expectedReturn.equals(actualReturnType)
+                                && !"unknown".equals(expectedReturn)) {
+                            throw new TypeError(currentFunctionName, expectedReturn, actualReturnType, line);
+                        }
+                    } else {
+                        funcRow.setValue("returns:" + actualReturnType);
                     }
-                } else {
-                    funcRow.setValue("returns:" + value.getType());
                 }
             }
         }
@@ -412,30 +447,29 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             return null;
         }
         String value = ctx.expression().getText();
-        // assignSymbol(variable, "VariableAssign", value);
-        String inferredType = "VariableAssign";
-        if (result instanceof NumberNode)
-            inferredType = "int";
-        else if (result instanceof StringNode)
-            inferredType = "string";
-        else if (result instanceof ListNode)
-            inferredType = "list";
-        else if (result instanceof DictNode)
-            inferredType = "dict";
+        String inferredType;
+        if (result instanceof NameNode && ("True".equals(value) || "False".equals(value))) {
+            inferredType = "bool";
+        } else {
+            inferredType = resolveRealType((ExpressionNode) result);
+        }
         // TypeError: Function Used as Variable:
-        if (currentScope == symbolTable) {
-            Row existing = symbolTable.getRowInCurrentScope(variable);
-            if (existing != null && existing.getType() != null
-                    && existing.getType().startsWith("Function/")) {
-                throw new TypeError(variable, true, line);
-            }
+        // Search the whole scope chain (not just global), but only flag it when the
+        // function was defined in this exact scope — a nested scope assigning a local
+        // variable that merely shadows an outer function name is legal and not an error.
+        Row existingFunc = currentScope.getRow(variable);
+        if (existingFunc != null && existingFunc.getType() != null
+                && existingFunc.getType().startsWith("Function/")
+                && existingFunc.getScope() != null
+                && existingFunc.getScope().equals(currentScope.getScopePath())) {
+            throw new TypeError(variable, true, line);
         }
         // TypeError: Invalid Assignment
         Row existingVar = currentScope.getRowInCurrentScope(variable);
         if (existingVar != null && existingVar.getType() != null
                 && inferredType != null
-                && !inferredType.equals("VariableAssign")
-                && !existingVar.getType().equals("VariableAssign")
+                && !inferredType.equals("unknown")
+                && !existingVar.getType().equals("unknown")
                 && !existingVar.getType().equals(inferredType)) {
             throw new TypeError(variable, existingVar.getType(), inferredType, true, line);
         }
@@ -486,7 +520,14 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         Row iterableRow = currentScope.getRow(iterable);
         if (iterableRow != null) {
             String iterType = iterableRow.getType();
-            if ("int".equals(iterType) || "bool".equals(iterType)) {
+            // Descriptive tags (Parameter, ForLoopVariable, WithAlias, VariableAssign)
+            // are placeholders in the symbol table, not real types — we don't actually
+            // know if the underlying value is iterable, so skip the check entirely.
+            boolean isDescriptiveTag = "Parameter".equals(iterType)
+                    || "ForLoopVariable".equals(iterType)
+                    || "WithAlias".equals(iterType)
+                    || "VariableAssign".equals(iterType);
+            if (!isDescriptiveTag && ("int".equals(iterType) || "bool".equals(iterType))) {
                 throw new TypeError(iterable, iterType, false, line);
             }
         }
@@ -578,7 +619,15 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             Row funcRow = currentScope.getRow(functionName);
             if (funcRow != null) {
                 String fType = funcRow.getType();
-                if ("int".equals(fType) || "string".equals(fType) || "bool".equals(fType)) {
+                // Descriptive tags (Parameter, ForLoopVariable, WithAlias, VariableAssign)
+                // are placeholders in the symbol table, not real types — we don't actually
+                // know if the underlying value is callable, so skip the check entirely.
+                boolean isDescriptiveTag = "Parameter".equals(fType)
+                        || "ForLoopVariable".equals(fType)
+                        || "WithAlias".equals(fType)
+                        || "VariableAssign".equals(fType);
+                if (!isDescriptiveTag && ("int".equals(fType) || "string".equals(fType)
+                        || "bool".equals(fType) || "list".equals(fType) || "dict".equals(fType))) {
                     throw new TypeError(functionName, fType, line);
                 }
             }
@@ -643,7 +692,18 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
         }
         //////
 
-        return new CallNode(functionName, arguments, line);
+        CallNode callNode = new CallNode(functionName, arguments, line);
+        // TypeError: Invalid Assignment — carry the callee's known return type (if any)
+        // so resolveRealType() can resolve it when this call is the right-hand side
+        // of an assignment (e.g. x = load_products()).
+        if (!functionName.isEmpty() && !functionName.contains(".")) {
+            Row funcRow = currentScope.getRow(functionName);
+            if (funcRow != null && funcRow.getValue() != null
+                    && funcRow.getValue().startsWith("returns:")) {
+                callNode.setType(funcRow.getValue().substring("returns:".length()));
+            }
+        }
+        return callNode;
     }
 
     @Override

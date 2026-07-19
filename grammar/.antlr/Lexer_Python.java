@@ -1,4 +1,4 @@
-// Generated from c:/Users/DELL/Desktop/compiler/compiler-web-interface/grammar/Lexer_Python.g4 by ANTLR 4.13.1
+// Generated from c:/Users/DELL/Desktop/University/compiler/compiler-web-interface/grammar/Lexer_Python.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
