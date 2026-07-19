@@ -22,11 +22,37 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
     private SymbolTable currentScope = symbolTable;
 
     // flask
-    private final List<String> jinjaVars = new ArrayList<>();
+    private final List<JinjaVarUsage> jinjaVars = new ArrayList<>();
     private final List<String> internalVars = new ArrayList<>();
     private String currentTemplateName = "";
 
-    public List<String> getJinjaVars() {
+    // A Jinja variable reference together with the real line it was used on
+    // (needed so FlaskVariableError can report an accurate line instead of a
+    // hardcoded value).
+    public static class JinjaVarUsage {
+        private final String name;
+        private final int line;
+
+        public JinjaVarUsage(String name, int line) {
+            this.name = name;
+            this.line = line;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getLine() {
+            return line;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    public List<JinjaVarUsage> getJinjaVars() {
         return jinjaVars;
     }
 
@@ -274,7 +300,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         // flask
         if (!iterable.isEmpty()) {
 
-            jinjaVars.add(iterable);
+            jinjaVars.add(new JinjaVarUsage(iterable, line));
         }
 
         /////
@@ -312,7 +338,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
             if (ctx.ifCondition() != null && ctx.ifCondition().IDENTIFIER().size() > 0) {
                 String firstIdentifier = ctx.ifCondition().IDENTIFIER(0).getText();
                 if (!firstIdentifier.isEmpty()) {
-                    jinjaVars.add(firstIdentifier);
+                    jinjaVars.add(new JinjaVarUsage(firstIdentifier, line));
                 }
                 condition = firstIdentifier;
             }
@@ -346,7 +372,7 @@ public class HTMLJinjaCSSVisitor extends Parser_HTML_Jinja_CSSBaseVisitor<ASTNod
         if (ctx.IDENTIFIER().size() > 0) {
             expression = ctx.IDENTIFIER(0).getText();
             if (!expression.isEmpty() && !internalVars.contains(expression)) {
-                jinjaVars.add(expression);
+                jinjaVars.add(new JinjaVarUsage(expression, line));
             }
         }
         return new JinjaExpressionNode(expression, line);

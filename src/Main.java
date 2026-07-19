@@ -82,7 +82,7 @@ public class Main {
             templateFiles.put("product_details.html", "frontend/templates/product_details.html");
             templateFiles.put("add_product.html", "frontend/templates/add_product.html");
 
-            Map<String, List<String>> htmlVarsMap = new LinkedHashMap<>();
+            Map<String, List<HTMLJinjaCSSVisitor.JinjaVarUsage>> htmlVarsMap = new LinkedHashMap<>();
 
             for (Map.Entry<String, String> entry : templateFiles.entrySet()) {
                 String templateName = entry.getKey();
@@ -102,7 +102,7 @@ public class Main {
                 htmlVisitor.setTemplateName(templateName);
                 htmlVisitor.visit(htmlTree);
 
-                List<String> jinjaVars = htmlVisitor.getJinjaVars();
+                List<HTMLJinjaCSSVisitor.JinjaVarUsage> jinjaVars = htmlVisitor.getJinjaVars();
                 htmlVarsMap.put(templateName, jinjaVars);
 
                 System.out.println("\n=== HTML: " + templateName + " ===");
@@ -111,21 +111,21 @@ public class Main {
 
             // ── المقارنة ──
             System.out.println("\n=== FLASK VARIABLE CHECK ===");
-            for (Map.Entry<String, List<String>> entry : htmlVarsMap.entrySet()) {
+            for (Map.Entry<String, List<HTMLJinjaCSSVisitor.JinjaVarUsage>> entry : htmlVarsMap.entrySet()) {
                 String templateName = entry.getKey();
-                List<String> usedVars = entry.getValue();
+                List<HTMLJinjaCSSVisitor.JinjaVarUsage> usedVars = entry.getValue();
 
                 if (usedVars.isEmpty())
                     continue;
 
                 if (!renderTemplateVars.containsKey(templateName)) {
-                    throw new FlaskVariableError(templateName, 1);
+                    throw new FlaskVariableError(templateName, usedVars.get(0).getLine());
                 }
 
                 List<String> sentVars = renderTemplateVars.get(templateName);
-                for (String usedVar : usedVars) {
-                    if (!sentVars.contains(usedVar)) {
-                        throw new FlaskVariableError(usedVar, templateName, 1);
+                for (HTMLJinjaCSSVisitor.JinjaVarUsage usedVar : usedVars) {
+                    if (!sentVars.contains(usedVar.getName())) {
+                        throw new FlaskVariableError(usedVar.getName(), templateName, usedVar.getLine());
                     }
                 }
             }
