@@ -447,12 +447,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             return null;
         }
         String value = ctx.expression().getText();
-        String inferredType;
-        if (result instanceof NameNode && ("True".equals(value) || "False".equals(value))) {
-            inferredType = "bool";
-        } else {
-            inferredType = resolveRealType((ExpressionNode) result);
-        }
+        String inferredType = resolveRealType((ExpressionNode) result);
         // TypeError: Function Used as Variable:
         // Search the whole scope chain (not just global), but only flag it when the
         // function was defined in this exact scope — a nested scope assigning a local
@@ -721,9 +716,16 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
                 resolveSymbol(name, line);
             }
             NameNode node = new NameNode(name, line);
-            Row r = currentScope.getRow(name);
-            if (r != null && r.getType() != null) {
-                node.setType(r.getType());
+            if ("True".equals(name) || "False".equals(name)) {
+                // True/False are registered as "BuiltinLiteral" in the symbol table
+                // (same tag as None), which isn't precise enough for type checks —
+                // tag them as their real type here instead.
+                node.setType("bool");
+            } else {
+                Row r = currentScope.getRow(name);
+                if (r != null && r.getType() != null) {
+                    node.setType(r.getType());
+                }
             }
             return node;
         }

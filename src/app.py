@@ -118,6 +118,8 @@ def test_scope():
 
 # x = 5
 # x = get_text() تفشل 
+#  x = True 
+#  x = 10
 #  // type error wrong WRONG_RETURN_TYPE case 6   بتكشف لما دالة وحدة بترجع أنواع مختلفة بأكتر من return statement: //
 # def calculate():
 #     return 5
@@ -125,7 +127,9 @@ def test_scope():
 # def calculate2(): error
 #     return "hello"
 #     return 10
-
+def calculate2(): error
+    return True
+    return 10
 
 # def calc(flag): error
 #     if flag:
