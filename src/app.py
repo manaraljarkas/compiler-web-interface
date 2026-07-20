@@ -127,9 +127,9 @@ def test_scope():
 # def calculate2(): error
 #     return "hello"
 #     return 10
-def calculate2(): error
-    return True
-    return 10
+# def calculate2(): error
+#     return True
+#     return 10
 
 # def calc(flag): error
 #     if flag:

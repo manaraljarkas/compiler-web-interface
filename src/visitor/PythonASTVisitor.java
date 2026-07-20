@@ -24,9 +24,12 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
     private String currentFunctionName = "";
 
     // Falsk error
-    private final Map<String, List<String>> renderTemplateVars = new LinkedHashMap<>();
+    // Each template name maps to a list of variable-lists — one entry per
+    // render_template() call that renders it, so multiple call sites for the
+    // same template no longer overwrite each other.
+    private final Map<String, List<List<String>>> renderTemplateVars = new LinkedHashMap<>();
 
-    public Map<String, List<String>> getRenderTemplateVars() {
+    public Map<String, List<List<String>>> getRenderTemplateVars() {
         return renderTemplateVars;
     }
 
@@ -682,7 +685,7 @@ public class PythonASTVisitor extends Parser_PythonBaseVisitor<ASTNode> {
             }
 
             if (templateName != null) {
-                renderTemplateVars.put(templateName, vars);
+                renderTemplateVars.computeIfAbsent(templateName, k -> new ArrayList<>()).add(vars);
             }
         }
         //////

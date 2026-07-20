@@ -75,7 +75,7 @@ public class Main {
 
             // flask
             // ── تحليل HTML templates ──
-            Map<String, List<String>> renderTemplateVars = visitor.getRenderTemplateVars();
+            Map<String, List<List<String>>> renderTemplateVars = visitor.getRenderTemplateVars();
 
             Map<String, String> templateFiles = new LinkedHashMap<>();
             templateFiles.put("products.html", "frontend/templates/products.html");
@@ -122,9 +122,18 @@ public class Main {
                     throw new FlaskVariableError(templateName, usedVars.get(0).getLine());
                 }
 
-                List<String> sentVars = renderTemplateVars.get(templateName);
+                // Every render_template() call site for this template gets its own
+                // variable list — a used variable is fine as long as ANY call site sent it.
+                List<List<String>> allSentVars = renderTemplateVars.get(templateName);
                 for (HTMLJinjaCSSVisitor.JinjaVarUsage usedVar : usedVars) {
-                    if (!sentVars.contains(usedVar.getName())) {
+                    boolean foundInAnyCall = false;
+                    for (List<String> sentVars : allSentVars) {
+                        if (sentVars.contains(usedVar.getName())) {
+                            foundInAnyCall = true;
+                            break;
+                        }
+                    }
+                    if (!foundInAnyCall) {
                         throw new FlaskVariableError(usedVar.getName(), templateName, usedVar.getLine());
                     }
                 }
